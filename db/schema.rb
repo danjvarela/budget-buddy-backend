@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_10_165049) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_10_173442) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
+
+  create_table "account_identities", force: :cascade do |t|
+    t.bigint "account_id"
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.index ["account_id"], name: "index_account_identities_on_account_id"
+    t.index ["provider", "uid"], name: "index_account_identities_on_provider_and_uid", unique: true
+  end
 
   create_table "account_login_change_keys", force: :cascade do |t|
     t.string "key", null: false
@@ -45,6 +53,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_10_165049) do
     t.index ["email"], name: "index_accounts_on_email", unique: true, where: "(status = ANY (ARRAY[1, 2]))"
   end
 
+  add_foreign_key "account_identities", "accounts", on_delete: :cascade
   add_foreign_key "account_login_change_keys", "accounts", column: "id"
   add_foreign_key "account_password_reset_keys", "accounts", column: "id"
   add_foreign_key "account_remember_keys", "accounts", column: "id"

@@ -6,7 +6,16 @@ class RodauthMain < Rodauth::Rails::Auth
     enable :create_account, :verify_account, :verify_account_grace_period,
       :login, :logout, :remember, :json,
       :reset_password, :change_password, :change_password_notify,
-      :change_login, :verify_login_change, :close_account
+      :change_login, :verify_login_change, :close_account, :omniauth
+
+    omniauth_provider :google_oauth2, Rails.application.credentials.google_oauth2["client_id"], Rails.application.credentials.google_oauth2["client_secret"], {
+      name: :google,
+      redirect_uri: "http://localhost:3001/auth/google/callback",
+      provider_ignores_state: true
+    }
+
+    omniauth_authorize_url_key "authorize_url"
+    omniauth_error_type_key "error_type"
 
     # See the Rodauth documentation for the list of available config options:
     # http://rodauth.jeremyevans.net/documentation.html
