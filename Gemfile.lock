@@ -374,6 +374,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
+  jwt (~> 2.8)
   omniauth-google-oauth2 (~> 1.1)
   pg (~> 1.1)
   puma (>= 5.0)
