@@ -6,7 +6,7 @@ class RodauthMain < Rodauth::Rails::Auth
     enable :create_account, :verify_account, :verify_account_grace_period,
       :login, :logout, :remember, :jwt,
       :reset_password, :change_password, :change_password_notify,
-      :change_login, :verify_login_change, :close_account, :omniauth
+      :change_login, :verify_login_change, :close_account, :omniauth, :active_sessions
 
     omniauth_provider :google_oauth2, Rails.application.credentials.google_oauth2["client_id"], Rails.application.credentials.google_oauth2["client_secret"], {
       name: :google,
