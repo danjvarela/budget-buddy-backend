@@ -184,21 +184,6 @@ paths:
                   email: example01@gmail.com
                   password: samplePassword
                   password-confirm: samplePassword
-  "/auth/google":
-    post:
-      summary: Creates a google authorization url where user can be redirected to
-        grant app authorization.
-      tags:
-      - Authentication
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              examples:
-                example:
-                  value:
-                    authorize_url: ''
   "/verify-account":
     post:
       summary: Verifies an account. The `key` is contained in the link that was sent
