@@ -18,16 +18,25 @@ RSpec.configure do |config|
     "v1/swagger.yaml" => {
       openapi: "3.0.1",
       info: {
-        title: "API V1",
+        title: "Budget Buddy API",
         version: "v1"
       },
       paths: {},
+      components: {
+        securitySchemes: {
+          cookie_based: {
+            type: :apiKey,
+            in: :cookie,
+            name: "_budget_buddy_session"
+          }
+        }
+      },
       servers: [
         {
-          url: "https://{defaultHost}",
+          url: "http://{defaultHost}",
           variables: {
             defaultHost: {
-              default: "www.example.com"
+              default: "localhost:3000"
             }
           }
         }

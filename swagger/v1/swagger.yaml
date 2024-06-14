@@ -1,0 +1,297 @@
+---
+openapi: 3.0.1
+info:
+  title: Budget Buddy API
+  version: v1
+paths:
+  "/change-login":
+    post:
+      summary: Requests change of account email. Sends confirmation email to the new
+        email.
+      tags:
+      - Account Management
+      parameters: []
+      security:
+      - cookie_based: []
+      responses:
+        '200':
+          description: change email link has been sent to the new email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The new email.
+                password:
+                  type: string
+              required:
+              - email
+              - password
+  "/verify-login-change":
+    post:
+      summary: Changes the account email. The `key` is contained in the link that
+        was sent to the new email when the change of email was requested.
+      tags:
+      - Account Management
+      parameters: []
+      responses:
+        '200':
+          description: account email has been changed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: The `key` is contained in the link that was sent to
+                    the new email when the change of email was requested.
+              required:
+              - key
+  "/change-password":
+    post:
+      summary: Changes account password. `password` here is the old password.
+      tags:
+      - Account Management
+      parameters: []
+      security:
+      - cookie_based: []
+      responses:
+        '200':
+          description: password has been changed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: The old password
+                new-password:
+                  type: string
+                password-confirm:
+                  type: string
+              required:
+              - password
+              - new-password
+              - password-confirm
+  "/reset-password-request":
+    post:
+      summary: Requests change of account password. Sends a password reset link to
+        the current email.
+      tags:
+      - Account Management
+      parameters: []
+      responses:
+        '200':
+          description: password reset link has been sent to the email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+              - email
+  "/reset-password":
+    post:
+      summary: Changes the account password. The `key` is contained in the password
+        reset link that was sent the account email.
+      tags:
+      - Account Management
+      parameters: []
+      responses:
+        '200':
+          description: password reset link has been sent to the email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                password-confirm:
+                  type: string
+                key:
+                  type: string
+                  description: The `key` is contained in the password reset link that
+                    was sent the account email.
+              required:
+              - password
+              - password-confirm
+              - key
+  "/close-account":
+    post:
+      summary: Closes the account. Note that there is not endpoint for reopening the
+        account.
+      tags:
+      - Account Management
+      parameters: []
+      security:
+      - cookie_based: []
+      responses:
+        '200':
+          description: account has been closed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+              required:
+              - password
+  "/create-account":
+    post:
+      summary: Creates an unverified account. Sends a verification email to the provided
+        email address.
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: unverified account has been created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                password-confirm:
+                  type: string
+              required:
+              - email
+              - password
+              - password-confirm
+            examples:
+              '0':
+                summary: Creates an unverified account. Sends a verification email
+                  to the provided email address.
+                value:
+                  email: example01@gmail.com
+                  password: samplePassword
+                  password-confirm: samplePassword
+  "/auth/google":
+    post:
+      summary: Creates a google authorization url where user can be redirected to
+        grant app authorization.
+      tags:
+      - Authentication
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    authorize_url: ''
+  "/verify-account":
+    post:
+      summary: Verifies an account. The `key` is contained in the link that was sent
+        to the user's email during account creation
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: account has been verified
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: The `key` is contained in the link that was sent to
+                    the user's email during account creation
+              required:
+              - key
+  "/login":
+    post:
+      summary: Logs in to an existing, verified account.
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: user has been logged in
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+              - email
+              - password
+  "/logout":
+    post:
+      summary: Logs out the current session. Include the `global_logout` attribute
+        and pass any value to logout of all sessions, otherwise don't include it in
+        the request body.
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: user has been logged out
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                global_logout:
+                  type: string
+                  description: Include this attribute and pass any value to logout
+                    of all sessions, otherwise don't include it in the request body.
+  "/verify-account-resend":
+    post:
+      summary: Resends account verification email. Note that there is a 5-minute delay
+        between resends.
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: email verification has been resent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+              - email
+components:
+  securitySchemes:
+    cookie_based:
+      type: apiKey
+      in: cookie
+      name: _budget_buddy_session
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000
