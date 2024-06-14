@@ -4,7 +4,7 @@ class RodauthMain < Rodauth::Rails::Auth
   configure do
     # List of authentication features that are loaded.
     enable :create_account, :verify_account, :verify_account_grace_period,
-      :login, :logout, :remember, :jwt,
+      :login, :logout, :remember, :json,
       :reset_password, :change_password, :change_password_notify,
       :change_login, :verify_login_change, :close_account, :omniauth, :active_sessions
 
@@ -40,8 +40,6 @@ class RodauthMain < Rodauth::Rails::Auth
 
     # Accept only JSON requests.
     only_json? true
-
-    jwt_secret { hmac_secret }
 
     # Handle login and password confirmation fields on the client side.
     # require_password_confirmation? false
