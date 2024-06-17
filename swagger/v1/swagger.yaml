@@ -12,7 +12,7 @@ paths:
       - Account Management
       parameters: []
       security:
-      - cookie_based: []
+      - bearer_auth: []
       responses:
         '200':
           description: change email link has been sent to the new email
@@ -59,7 +59,7 @@ paths:
       - Account Management
       parameters: []
       security:
-      - cookie_based: []
+      - bearer_auth: []
       responses:
         '200':
           description: password has been changed
@@ -136,7 +136,7 @@ paths:
       - Account Management
       parameters: []
       security:
-      - cookie_based: []
+      - bearer_auth: []
       responses:
         '200':
           description: account has been closed
@@ -181,9 +181,9 @@ paths:
                 summary: Creates an unverified account. Sends a verification email
                   to the provided email address.
                 value:
-                  email: example01@gmail.com
-                  password: samplePassword
-                  password-confirm: samplePassword
+                  email: example01@email.com
+                  password: 123qwe123
+                  password-confirm: 123qwe123
   "/verify-account":
     post:
       summary: Verifies an account. The `key` is contained in the link that was sent
@@ -228,6 +228,12 @@ paths:
               required:
               - email
               - password
+            examples:
+              '0':
+                summary: Logs in to an existing, verified account.
+                value:
+                  email: example01@email.com
+                  password: 123qwe123
   "/logout":
     post:
       summary: Logs out the current session. Include the `global_logout` attribute
@@ -236,6 +242,8 @@ paths:
       tags:
       - Authentication
       parameters: []
+      security:
+      - bearer_auth: []
       responses:
         '200':
           description: user has been logged out
@@ -271,10 +279,9 @@ paths:
               - email
 components:
   securitySchemes:
-    cookie_based:
-      type: apiKey
-      in: cookie
-      name: _budget_buddy_session
+    bearer_auth:
+      type: http
+      scheme: bearer
 servers:
 - url: http://{defaultHost}
   variables:

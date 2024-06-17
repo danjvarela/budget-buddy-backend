@@ -4,9 +4,9 @@ class RodauthMain < Rodauth::Rails::Auth
   configure do
     # List of authentication features that are loaded.
     enable :create_account, :verify_account, :verify_account_grace_period,
-      :login, :logout, :remember, :json,
+      :login, :logout, :remember,
       :reset_password, :change_password, :change_password_notify,
-      :change_login, :verify_login_change, :close_account, :omniauth, :active_sessions
+      :change_login, :verify_login_change, :close_account, :omniauth, :active_sessions, :jwt
 
     omniauth_provider :google_oauth2, Rails.application.credentials.google_oauth2["client_id"], Rails.application.credentials.google_oauth2["client_secret"], {
       name: :google,
@@ -38,7 +38,9 @@ class RodauthMain < Rodauth::Rails::Auth
     # Defaults to Rails `secret_key_base`, but you can use your own secret key.
     # hmac_secret "273669715caef1957ecabcd2030920a61cfe0651a9136d38b7dea63f816a5f3f0bb283da3d5919f3677d80f0c9e80b3a11e41a987ab1809db1f5483e917a65d1"
 
-    # Accept only JSON requests.
+    jwt_secret { hmac_secret }
+
+    # Accept nly JSON requests.
     only_json? true
 
     # Handle login and password confirmation fields on the client side.

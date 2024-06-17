@@ -24,10 +24,9 @@ RSpec.configure do |config|
       paths: {},
       components: {
         securitySchemes: {
-          cookie_based: {
-            type: :apiKey,
-            in: :cookie,
-            name: "_budget_buddy_session"
+          bearer_auth: {
+            type: :http,
+            scheme: :bearer
           }
         }
       },

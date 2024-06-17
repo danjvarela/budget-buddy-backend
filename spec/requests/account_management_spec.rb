@@ -13,7 +13,7 @@ RSpec.describe "Authentication", type: :request do
         },
         required: ["email", "password"]
       }
-      security [cookie_based: []]
+      security [bearer_auth: []]
 
       response 200, "change email link has been sent to the new email" do
         run_test!
@@ -52,7 +52,7 @@ RSpec.describe "Authentication", type: :request do
         },
         required: ["password", "new-password", "password-confirm"]
       }
-      security [cookie_based: []]
+      security [bearer_auth: []]
 
       response 200, "password has been changed" do
         run_test!
@@ -109,7 +109,7 @@ RSpec.describe "Authentication", type: :request do
         },
         required: ["password"]
       }
-      security [cookie_based: []]
+      security [bearer_auth: []]
 
       response 200, "account has been closed" do
         run_test!

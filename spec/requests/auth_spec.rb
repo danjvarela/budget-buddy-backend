@@ -15,9 +15,9 @@ RSpec.describe "Authentication", type: :request do
         required: ["email", "password", "password-confirm"]
       }
       request_body_example value: {
-        email: "example01@gmail.com",
-        password: "samplePassword",
-        "password-confirm": "samplePassword"
+        email: "example01@email.com",
+        password: "123qwe123",
+        "password-confirm": "123qwe123"
       }
 
       response 200, "unverified account has been created" do
@@ -56,6 +56,10 @@ RSpec.describe "Authentication", type: :request do
         },
         required: ["email", "password"]
       }
+      request_body_example value: {
+        email: "example01@email.com",
+        password: "123qwe123"
+      }
 
       response 200, "user has been logged in" do
         run_test!
@@ -73,6 +77,7 @@ RSpec.describe "Authentication", type: :request do
           global_logout: {type: :string, description: "Include this attribute and pass any value to logout of all sessions, otherwise don't include it in the request body."}
         }
       }
+      security [bearer_auth: []]
 
       response 200, "user has been logged out" do
         run_test!
