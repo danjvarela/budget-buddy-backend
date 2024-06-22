@@ -59,3 +59,5 @@ gem "omniauth-google-oauth2", "~> 1.1"
 gem "jwt", "~> 2.8"
 
 gem "rodauth-model", "~> 0.2.1"
+
+gem "jsonapi-serializer"

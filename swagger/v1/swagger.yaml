@@ -277,6 +277,16 @@ paths:
                   type: string
               required:
               - email
+  "/current-account":
+    get:
+      summary: Retrieves the currently logged account
+      tags:
+      - Session
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: ''
 components:
   securitySchemes:
     bearer_auth:
