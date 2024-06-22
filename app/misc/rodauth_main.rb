@@ -10,7 +10,7 @@ class RodauthMain < Rodauth::Rails::Auth
 
     omniauth_provider :google_oauth2, Rails.application.credentials.google_oauth2["client_id"], Rails.application.credentials.google_oauth2["client_secret"], {
       name: :google,
-      redirect_uri: "http://localhost:3001/auth/google/callback",
+      redirect_uri: "#{Rails.application.credentials.frontend_url}/auth/google/callback",
       provider_ignores_state: true
     }
 
@@ -92,7 +92,7 @@ class RodauthMain < Rodauth::Rails::Auth
       RodauthMailer.verify_account(self.class.configuration_name, account_id, verify_account_key_value)
     end
     verify_account_email_link do
-      "http://localhost:3001/auth/verify-account?key=#{token_param_value(verify_account_key_value)}"
+      "#{Rails.application.credentials.frontend_url}/auth/verify-account?key=#{token_param_value(verify_account_key_value)}"
     end
     create_verify_login_change_email do |_login|
       RodauthMailer.verify_login_change(self.class.configuration_name, account_id, verify_login_change_key_value)
