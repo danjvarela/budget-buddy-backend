@@ -44,6 +44,10 @@ class RodauthMain < Rodauth::Rails::Auth
     only_json? true
 
     already_an_account_with_this_login_message { "an account with this email already exists" }
+    
+    login_does_not_meet_requirements_message do
+      "invalid email#{", #{login_requirement_message}" if login_requirement_message}"
+    end
 
     # Handle login and password confirmation fields on the client side.
     # require_password_confirmation? false
