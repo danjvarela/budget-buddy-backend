@@ -43,6 +43,8 @@ class RodauthMain < Rodauth::Rails::Auth
     # Accept nly JSON requests.
     only_json? true
 
+    already_an_account_with_this_login_message { "an account with this email already exists" }
+
     # Handle login and password confirmation fields on the client side.
     # require_password_confirmation? false
     # require_login_confirmation? false
