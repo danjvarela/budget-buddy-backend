@@ -6,7 +6,7 @@ class FinancialAccountsController < ApplicationController
   def index
     @financial_accounts = FinancialAccount.all
 
-    render json: FinancialAccountSerializer.new(@financial_accounts).serializable_hash
+    render json: ActiveModel::SerializableResource.new(@financial_accounts).to_json
   end
 
   # GET /financial_accounts/1

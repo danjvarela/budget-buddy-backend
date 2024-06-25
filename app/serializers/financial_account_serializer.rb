@@ -1,6 +1,3 @@
-class FinancialAccountSerializer
-  include JSONAPI::Serializer
-  set_key_transform :camel_lower
+class FinancialAccountSerializer < ActiveModel::Serializer
   attributes :id, :name, :amount, :description
-  belongs_to :account
 end

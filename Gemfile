@@ -63,4 +63,4 @@ gem "jwt", "~> 2.8"
 
 gem "rodauth-model", "~> 0.2.1"
 
-gem "jsonapi-serializer"
+gem "active_model_serializers", "~> 0.10.0"

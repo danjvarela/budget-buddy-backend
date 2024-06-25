@@ -1,4 +1,3 @@
-class AccountSerializer
-  include JSONAPI::Serializer
+class AccountSerializer < ActiveModel::Serializer
   attributes :id, :email, :status
 end
