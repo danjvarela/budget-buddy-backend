@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_13_173142) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_25_153918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -61,10 +61,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_13_173142) do
     t.index ["email"], name: "index_accounts_on_email", unique: true, where: "(status = ANY (ARRAY[1, 2]))"
   end
 
+  create_table "financial_accounts", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.float "amount", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_financial_accounts_on_account_id"
+  end
+
   add_foreign_key "account_active_session_keys", "accounts"
   add_foreign_key "account_identities", "accounts", on_delete: :cascade
   add_foreign_key "account_login_change_keys", "accounts", column: "id"
   add_foreign_key "account_password_reset_keys", "accounts", column: "id"
   add_foreign_key "account_remember_keys", "accounts", column: "id"
   add_foreign_key "account_verification_keys", "accounts", column: "id"
+  add_foreign_key "financial_accounts", "accounts"
 end

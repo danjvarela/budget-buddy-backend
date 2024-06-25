@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :financial_accounts
+
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

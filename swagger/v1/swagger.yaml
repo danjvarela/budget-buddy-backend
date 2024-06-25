@@ -277,6 +277,33 @@ paths:
                   type: string
               required:
               - email
+  "/financial_accounts":
+    post:
+      summary: Creates a new financial account
+      tags:
+      - Financial Account
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '201':
+          description: new financial account created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The new email.
+                amount:
+                  type: number
+                description:
+                  type: string
+              required:
+              - name
+              - amount
   "/current-account":
     get:
       summary: Retrieves the currently logged account

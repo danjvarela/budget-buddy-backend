@@ -1,15 +1,13 @@
-require "swagger_helper"
+require "rails_helper"
+require "auth_context"
 
-RSpec.describe "Session", type: :request do
-  path "/current-account" do
-    get "Retrieves the currently logged account" do
-      tags "Session"
-      consumes "application/json"
-      security [bearer_auth: []]
+RSpec.describe "financial accounts", type: :request do
+  include_context "auth"
 
-      response 200, "" do
-        run_test!
-      end
+  describe "GET /current-account" do
+    it "renders a successful response" do
+      get "/current-account", headers: valid_headers, as: :json
+      expect(response).to be_successful
     end
   end
 end

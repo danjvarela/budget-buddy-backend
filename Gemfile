@@ -44,6 +44,9 @@ group :development, :test do
   gem "solargraph-standardrb"
 
   gem "rspec-rails", "~> 6.1.0"
+  gem "factory_bot_rails"
+  gem "shoulda-matchers", "~> 6.0"
+  gem "database_cleaner-active_record"
 end
 
 group :development do
