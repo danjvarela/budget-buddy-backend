@@ -281,29 +281,133 @@ paths:
     post:
       summary: Creates a new financial account
       tags:
-      - Financial Account
+      - Financial Accounts
       parameters: []
       security:
       - bearer_auth: []
       responses:
         '201':
-          description: new financial account created
+          description: financial account created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/financial_account"
+        '422':
+          description: failed to create financial account
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      name:
+                      - can't be blank
+              schema:
+                "$ref": "#/components/schemas/resource_creation_error"
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The new email.
-                amount:
-                  type: number
-                description:
-                  type: string
-              required:
-              - name
-              - amount
+              "$ref": "#/components/schemas/create_financial_account_params"
+            examples:
+              example:
+                summary: Creates a new financial account
+                value:
+                  name: Cash
+                  amount: 30.0
+                  description: Cash on hand
+    get:
+      summary: Gets all financial accounts associated to the logged in account
+      tags:
+      - Financial Accounts
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: financial accounts returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/financial_account"
+  "/financial_accounts/{id}":
+    get:
+      summary: Gets the details of a financial account
+      tags:
+      - Financial Accounts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: financial account returned
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/financial_account"
+        '404':
+          description: financial account not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+    put:
+      summary: Updates a financial account
+      tags:
+      - Financial Accounts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: financial account updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/financial_account"
+        '404':
+          description: financial account not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/update_financial_account_params"
+    delete:
+      summary: deletes a financial account
+      tags:
+      - Financial Accounts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: financial account deleted
+        '404':
+          description: financial account not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
   "/current-account":
     get:
       summary: Retrieves the currently logged account
@@ -313,12 +417,65 @@ paths:
       - bearer_auth: []
       responses:
         '200':
-          description: ''
+          description: success
 components:
   securitySchemes:
     bearer_auth:
       type: http
       scheme: bearer
+  schemas:
+    resource_creation_error:
+      type: object
+      properties:
+        errors:
+          type: object
+          additional_properties:
+            type: array
+            items:
+              type: string
+      required:
+      - errors
+    resource_not_found_error:
+      type: object
+      properties:
+        error:
+          type: string
+    financial_account:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        amount:
+          type: number
+          format: float
+        description:
+          type: string
+          nullable: true
+    create_financial_account_params:
+      type: object
+      properties:
+        name:
+          type: string
+        amount:
+          type: number
+          format: float
+        description:
+          type: string
+      required:
+      - name
+      - amount
+    update_financial_account_params:
+      type: object
+      properties:
+        name:
+          type: string
+        amount:
+          type: number
+          format: float
+        description:
+          type: string
 servers:
 - url: http://{defaultHost}
   variables:

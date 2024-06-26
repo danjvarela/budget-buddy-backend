@@ -28,6 +28,53 @@ RSpec.configure do |config|
             type: :http,
             scheme: :bearer
           }
+        },
+        schemas: {
+          resource_creation_error: {
+            type: :object,
+            properties: {
+              errors: {
+                type: :object,
+                additional_properties: {
+                  type: :array,
+                  items: {type: :string}
+                }
+              }
+            },
+            required: ["errors"]
+          },
+          resource_not_found_error: {
+            type: :object,
+            properties: {
+              error: {type: :string}
+            }
+          },
+          financial_account: {
+            type: :object,
+            properties: {
+              id: {type: :integer},
+              name: {type: :string},
+              amount: {type: :number, format: :float},
+              description: {type: :string, nullable: true}
+            }
+          },
+          create_financial_account_params: {
+            type: :object,
+            properties: {
+              name: {type: :string},
+              amount: {type: :number, format: :float},
+              description: {type: :string}
+            },
+            required: ["name", "amount"]
+          },
+          update_financial_account_params: {
+            type: :object,
+            properties: {
+              name: {type: :string},
+              amount: {type: :number, format: :float},
+              description: {type: :string}
+            }
+          }
         }
       },
       servers: [
@@ -48,4 +95,6 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
+
+  # config.openapi_strict_schema_validation = true
 end

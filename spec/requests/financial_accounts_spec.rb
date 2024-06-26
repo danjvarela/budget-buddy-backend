@@ -1,104 +1,106 @@
-require "rails_helper"
+require "swagger_helper"
 require "auth_context"
 
-RSpec.describe "financial accounts", type: :request do
+RSpec.describe "Financial Accounts", type: :request do
   include_context "auth"
 
-  describe "GET /financial_accounts" do
-    it "renders a successful response" do
-      create :financial_account
-      get financial_accounts_url, headers: valid_headers, as: :json
-      expect(response).to be_successful
-    end
-  end
+  path "/financial_accounts" do
+    post "Creates a new financial account" do
+      tags "Financial Accounts"
+      consumes "application/json"
+      produces "application/json"
+      parameter name: :financial_account, in: :body, schema: {"$ref" => "#/components/schemas/create_financial_account_params"}
+      security [bearer_auth: []]
+      request_body_example value: {name: "Cash", amount: 30.0, description: "Cash on hand"}, name: :example
 
-  describe "GET /financial_accounts/:id" do
-    it "renders a successful response" do
-      financial_account = create :financial_account
-      get financial_account_url(financial_account), headers: valid_headers, as: :json
-      expect(response).to be_successful
-    end
-  end
-
-  describe "POST /financial_accounts" do
-    context "with valid parameters" do
-      let(:valid_attributes) { attributes_for :financial_account }
-
-      it "creates a new FinancialAccount" do
-        expect {
-          post financial_accounts_url,
-            params: {financial_account: valid_attributes}, headers: valid_headers, as: :json
-        }.to change(FinancialAccount, :count).by(1)
+      response 201, "financial account created" do
+        schema "$ref" => "#/components/schemas/financial_account"
+        let(:financial_account) { attributes_for :financial_account }
+        run_test!
       end
 
-      it "renders a JSON response with the new financial_account" do
-        post financial_accounts_url,
-          params: {financial_account: valid_attributes}, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:created)
-        expect(response.content_type).to match(a_string_including("application/json"))
+      response 422, "failed to create financial account" do
+        schema "$ref" => "#/components/schemas/resource_creation_error"
+        example "application/json", :example, {errors: {name: ["can't be blank"]}}
+        let(:financial_account) { {**attributes_for(:financial_account), name: nil} }
+        run_test!
       end
     end
 
-    context "with invalid parameters" do
-      let(:invalid_attributes) {
-        {**attributes_for(:financial_account), amount: nil}
-      }
+    get "Gets all financial accounts associated to the logged in account" do
+      tags "Financial Accounts"
+      consumes "application/json"
+      produces "application/json"
+      security [bearer_auth: []]
 
-      it "does not create a new FinancialAccount" do
-        expect {
-          post financial_accounts_url,
-            params: {financial_account: invalid_attributes}, as: :json
-        }.to change(FinancialAccount, :count).by(0)
-      end
-
-      it "renders a JSON response with errors for the new financial_account" do
-        post financial_accounts_url,
-          params: {financial_account: invalid_attributes}, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to match(a_string_including("application/json"))
+      response 200, "financial accounts returned" do
+        schema type: :array, items: {"$ref" => "#/components/schemas/financial_account"}
+        run_test!
       end
     end
   end
 
-  describe "PATCH /financial_account/:id" do
-    context "with valid parameters" do
-      it "updates the requested financial_account" do
-        financial_account = create :financial_account
-        new_attributes = attributes_for :financial_account
-        patch financial_account_url(financial_account),
-          params: {financial_account: new_attributes}, headers: valid_headers, as: :json
-        financial_account.reload
-        expect(financial_account.name).to eq(new_attributes[:name])
+  path "/financial_accounts/{id}" do
+    get "Gets the details of a financial account" do
+      tags "Financial Accounts"
+      consumes "application/json"
+      produces "application/json"
+      parameter name: :id, in: :path, type: :integer
+      security [bearer_auth: []]
+
+      response 200, "financial account returned" do
+        schema "$ref" => "#/components/schemas/financial_account"
+        let(:id) { create(:financial_account).id }
+        run_test!
       end
 
-      it "renders a JSON response with the financial_account" do
-        financial_account = create :financial_account
-        new_attributes = attributes_for :financial_account
-        patch financial_account_url(financial_account),
-          params: {financial_account: new_attributes}, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to match(a_string_including("application/json"))
+      response 404, "financial account not found" do
+        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        let(:id) { create(:financial_account).id }
+        run_test!
+      end
+    end
+
+    put "Updates a financial account" do
+      tags "Financial Accounts"
+      consumes "application/json"
+      produces "application/json"
+      parameter name: :id, in: :path, type: :integer
+      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/update_financial_account_params"}
+      security [bearer_auth: []]
+
+      response 200, "financial account updated" do
+        schema "$ref" => "#/components/schemas/financial_account"
+        let(:financial_account) { create :financial_account }
+        let(:id) { financial_account.id }
+        let(:new_attributes) { {name: generate(:financial_account_name)} }
+        run_test!
+      end
+
+      response 404, "financial account not found" do
+        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        let(:id) { create(:financial_account).id }
+        run_test!
       end
     end
 
-    context "with invalid parameters" do
-      it "renders a JSON response with errors for the financial_account" do
-        financial_account = create :financial_account
-        invalid_attributes = {amount: nil}
-        patch financial_account_url(financial_account),
-          params: {financial_account: invalid_attributes}, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-  end
+    delete "deletes a financial account" do
+      tags "Financial Accounts"
+      consumes "application/json"
+      produces "application/json"
+      parameter name: :id, in: :path, type: :integer
+      security [bearer_auth: []]
 
-  describe "DELETE /financial_account/:id" do
-    it "destroys the requested financial_account" do
-      financial_account = create :financial_account
-      expect {
-        delete financial_account_url(financial_account), headers: valid_headers, as: :json
-      }.to change(FinancialAccount, :count).by(-1)
+      response 204, "financial account deleted" do
+        let(:id) { create(:financial_account).id }
+        run_test!
+      end
+
+      response 404, "financial account not found" do
+        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        let(:id) { create(:financial_account).id }
+        run_test!
+      end
     end
   end
 end

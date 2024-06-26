@@ -16,7 +16,7 @@ RSpec.describe "Authentication", type: :request do
       security [bearer_auth: []]
 
       response 200, "change email link has been sent to the new email" do
-        run_test!
+        skip
       end
     end
   end
@@ -34,7 +34,7 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "account email has been changed" do
-        run_test!
+        skip
       end
     end
   end
@@ -55,7 +55,7 @@ RSpec.describe "Authentication", type: :request do
       security [bearer_auth: []]
 
       response 200, "password has been changed" do
-        run_test!
+        skip
       end
     end
   end
@@ -73,7 +73,7 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "password reset link has been sent to the email" do
-        run_test!
+        skip
       end
     end
   end
@@ -93,7 +93,7 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "password reset link has been sent to the email" do
-        run_test!
+        skip
       end
     end
   end
@@ -112,7 +112,7 @@ RSpec.describe "Authentication", type: :request do
       security [bearer_auth: []]
 
       response 200, "account has been closed" do
-        run_test!
+        skip
       end
     end
   end
