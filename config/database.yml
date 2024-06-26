@@ -78,7 +78,7 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
+  # <<: *default
   database: budget_buddy_backend_production
   username: postgres
-  password: <%= ENV["BUDGET_BUDDY_BACKEND_DATABASE_PASSWORD"] %>
+  # password: <%= ENV["BUDGET_BUDDY_BACKEND_DATABASE_PASSWORD"] %>

@@ -35,7 +35,7 @@ RSpec.configure do |config|
             properties: {
               errors: {
                 type: :object,
-                additional_properties: {
+                additionalProperties: {
                   type: :array,
                   items: {type: :string}
                 }
@@ -79,10 +79,10 @@ RSpec.configure do |config|
       },
       servers: [
         {
-          url: "http://{defaultHost}",
+          url: "https://{defaultHost}",
           variables: {
             defaultHost: {
-              default: "localhost:3000"
+              default: "budget-buddy-backend.fly.dev"
             }
           }
         }
