@@ -6,7 +6,7 @@ class FinancialAccountsController < ApplicationController
   def index
     @financial_accounts = FinancialAccount.all
 
-    render json: ActiveModel::SerializableResource.new(@financial_accounts).to_json
+    render json: ActiveModelSerializers::SerializableResource.new(@financial_accounts).to_json
   end
 
   # GET /financial_accounts/1
@@ -16,13 +16,12 @@ class FinancialAccountsController < ApplicationController
 
   # POST /financial_accounts
   def create
-    @financial_account = FinancialAccount.new(financial_account_params)
-    serialized_financial_account = FinancialAccountSerializer.new(@financial_account).serializable_hash
+    financial_account = FinancialAccount.new(financial_account_params)
 
-    if @financial_account.save
-      render json: serialized_financial_account, status: :created
+    if financial_account.save
+      render json: FinancialAccountSerializer.new(financial_account).serializable_hash, status: :created
     else
-      render json: {errors: @financial_account.errors}, status: :unprocessable_entity
+      render json: {errors: financial_account.errors}, status: :unprocessable_entity
     end
   end
 
