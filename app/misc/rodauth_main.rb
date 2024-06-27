@@ -51,7 +51,7 @@ class RodauthMain < Rodauth::Rails::Auth
     verify_login_change_email_subject "Request to change your email"
     password_changed_email_subject "Password change"
 
-    email_from "contact@#{Rails.application.credentials.frontend[:host]}"
+    email_from "dan@danvarela.com"
 
     login_does_not_meet_requirements_message do
       "invalid email#{", #{login_requirement_message}" if login_requirement_message}"
