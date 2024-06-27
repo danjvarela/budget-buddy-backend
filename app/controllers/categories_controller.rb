@@ -65,7 +65,6 @@ class CategoriesController < ApplicationController
   end
 
   def all_categories_params
-    Rails.logger.info "params #{params.permit(:category_type)}"
     include_account_id(params.permit(:category_type))
   end
 end
