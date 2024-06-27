@@ -22,7 +22,7 @@ jobs:
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
         with:
-          doc: danvarela
+          doc: budget-buddy
           token: ${{secrets.BUMP_TOKEN}}
           file: swagger/v1/swagger.yaml
   api-diff:
@@ -35,7 +35,7 @@ jobs:
       - name: Comment pull request with API diff
         uses: bump-sh/github-action@v1
         with:
-          doc: danvarela
+          doc: budget-buddy
           token: ${{secrets.BUMP_TOKEN}}
           file: swagger/v1/swagger.yaml
           command: diff
