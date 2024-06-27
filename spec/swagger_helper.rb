@@ -49,31 +49,20 @@ RSpec.configure do |config|
               error: {type: :string}
             }
           },
-          financial_account: {
+          base_financial_account: {
             type: :object,
             properties: {
-              id: {type: :integer},
               name: {type: :string},
               amount: {type: :number, format: :float},
               description: {type: :string, nullable: true}
             }
           },
           create_financial_account_params: {
-            type: :object,
-            properties: {
-              name: {type: :string},
-              amount: {type: :number, format: :float},
-              description: {type: :string}
-            },
+            allOf: [{"$ref": "#/components/schemas/base_financial_account"}],
             required: ["name", "amount"]
           },
-          update_financial_account_params: {
-            type: :object,
-            properties: {
-              name: {type: :string},
-              amount: {type: :number, format: :float},
-              description: {type: :string}
-            }
+          financial_account: {
+            allOf: [{"$ref": "#/components/schemas/base_financial_account"}, {type: :object, properties: {id: {type: :integer}}}]
           },
           base_category: {
             type: :object,
