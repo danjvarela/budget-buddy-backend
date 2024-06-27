@@ -66,7 +66,16 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  config.action_mailer.default_url_options = {host: "budget-buddy-backend.fly.dev", protocol: "https"}
+  config.action_mailer.default_url_options = {host: Rails.application.credentials.frontend_hostname_with_port}
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    user_name: Rails.application.credentials.mailtrap[:user_name],
+    password: Rails.application.credentials.mailtrap[:password],
+    address: "sandbox.smtp.mailtrap.io",
+    host: "sandbox.smtp.mailtrap.io",
+    port: "2525",
+    authentication: :login
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

@@ -152,6 +152,7 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mailtrap (2.0.0)
     marcel (1.0.4)
     mini_mime (1.1.5)
     minitest (5.23.1)
@@ -400,6 +401,7 @@ DEPENDENCIES
   dockerfile-rails (>= 1.6)
   factory_bot_rails
   jwt (~> 2.8)
+  mailtrap (~> 2.0)
   omniauth-google-oauth2 (~> 1.1)
   pg (~> 1.1)
   puma (>= 5.0)

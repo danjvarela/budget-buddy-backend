@@ -44,6 +44,15 @@ class RodauthMain < Rodauth::Rails::Auth
 
     already_an_account_with_this_login_message { "an account with this email already exists" }
 
+    email_subject_prefix "Budget Buddy - "
+
+    verify_account_email_subject "Request to verify your account"
+    reset_password_email_subject "Request to change your password"
+    verify_login_change_email_subject "Request to change your email"
+    password_changed_email_subject "Password change"
+
+    email_from "contact@#{domain}"
+
     login_does_not_meet_requirements_message do
       "invalid email#{", #{login_requirement_message}" if login_requirement_message}"
     end
@@ -151,13 +160,13 @@ class RodauthMain < Rodauth::Rails::Auth
 
     # ==> Remember Feature
     # Remember all logged in users.
-    after_login { remember_login }
+    # after_login { remember_login }
 
     # Or only remember users that have ticked a "Remember Me" checkbox on login.
     # after_login { remember_login if param_or_nil("remember") }
 
     # Extend user's remember period when remembered via a cookie
-    extend_remember_deadline? true
+    # extend_remember_deadline? true
 
     # ==> Hooks
     # Validate custom fields in the create account form.
