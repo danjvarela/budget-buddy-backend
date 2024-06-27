@@ -4,7 +4,7 @@ class FinancialAccountsController < ApplicationController
 
   # GET /financial_accounts
   def index
-    @financial_accounts = FinancialAccount.all
+    @financial_accounts = FinancialAccount.where(account_id: logged_account.id).all
 
     render json: ActiveModelSerializers::SerializableResource.new(@financial_accounts).to_json
   end
@@ -16,12 +16,12 @@ class FinancialAccountsController < ApplicationController
 
   # POST /financial_accounts
   def create
-    financial_account = FinancialAccount.new(financial_account_params)
+    @financial_account = FinancialAccount.new(financial_account_params)
 
-    if financial_account.save
-      render json: FinancialAccountSerializer.new(financial_account).serializable_hash, status: :created
+    if @financial_account.save
+      render json: serialized_financial_account, status: :created
     else
-      render json: {errors: financial_account.errors}, status: :unprocessable_entity
+      render json: {errors: @financial_account.errors}, status: :unprocessable_entity
     end
   end
 
@@ -52,8 +52,6 @@ class FinancialAccountsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def financial_account_params
-    request_params = params.require(:financial_account).permit(:name, :description, :amount)
-    request_params[:account_id] = rodauth.rails_account.id
-    request_params
+    include_account_id(params.require(:financial_account).permit(:name, :description, :amount))
   end
 end
