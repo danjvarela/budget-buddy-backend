@@ -56,7 +56,7 @@ RSpec.describe "Financial Accounts", type: :request do
 
       response 404, "financial account not found" do
         schema "$ref" => "#/components/schemas/resource_not_found_error"
-        let(:id) { create(:financial_account).id }
+        let(:id) { 1000000 }
         run_test!
       end
     end
@@ -79,7 +79,8 @@ RSpec.describe "Financial Accounts", type: :request do
 
       response 404, "financial account not found" do
         schema "$ref" => "#/components/schemas/resource_not_found_error"
-        let(:id) { create(:financial_account).id }
+        let(:id) { 100000 }
+        let(:new_attributes) { {name: generate(:financial_account_name)} }
         run_test!
       end
     end
@@ -98,7 +99,7 @@ RSpec.describe "Financial Accounts", type: :request do
 
       response 404, "financial account not found" do
         schema "$ref" => "#/components/schemas/resource_not_found_error"
-        let(:id) { create(:financial_account).id }
+        let(:id) { 100000 }
         run_test!
       end
     end
