@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :categories
   resources :financial_accounts
 
   mount Rswag::Ui::Engine => "/api-docs"

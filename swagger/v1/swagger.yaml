@@ -277,6 +277,136 @@ paths:
                   type: string
               required:
               - email
+  "/categories":
+    post:
+      summary: Creates a new category
+      tags:
+      - Categories
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '201':
+          description: category created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/category"
+        '422':
+          description: failed to create category
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      name:
+                      - can't be blank
+              schema:
+                "$ref": "#/components/schemas/resource_creation_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/create_category_params"
+            examples:
+              example:
+                summary: Creates a new category
+                value:
+                  name: Transportation
+                  category_type: expense
+    get:
+      summary: Gets all categories associated to the logged in account
+      tags:
+      - Categories
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: categories returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/category"
+  "/categories/{id}":
+    get:
+      summary: Gets the details of a category
+      tags:
+      - Categories
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: category returned
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/category"
+        '404':
+          description: category not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+    put:
+      summary: Updates a category
+      tags:
+      - Categories
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: category updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/category"
+        '404':
+          description: category not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/base_category"
+    delete:
+      summary: deletes a category
+      tags:
+      - Categories
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: category deleted
+        '404':
+          description: category not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
   "/financial_accounts":
     post:
       summary: Creates a new financial account
@@ -476,6 +606,29 @@ components:
           format: float
         description:
           type: string
+    base_category:
+      type: object
+      properties:
+        category_type:
+          type: string
+          enum:
+          - income
+          - expense
+        name:
+          type: string
+    create_category_params:
+      allOf:
+      - "$ref": "#/components/schemas/base_category"
+      required:
+      - name
+      - category_type
+    category:
+      allOf:
+      - "$ref": "#/components/schemas/base_category"
+      - type: object
+        properties:
+          id:
+            type: integer
 servers:
 - url: https://{defaultHost}
   variables:

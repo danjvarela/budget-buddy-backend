@@ -74,6 +74,23 @@ RSpec.configure do |config|
               amount: {type: :number, format: :float},
               description: {type: :string}
             }
+          },
+          base_category: {
+            type: :object,
+            properties: {
+              category_type: {type: :string, enum: [:income, :expense]},
+              name: {type: :string}
+            }
+          },
+          create_category_params: {
+            allOf: ["$ref": "#/components/schemas/base_category"],
+            required: ["name", "category_type"]
+          },
+          category: {
+            allOf: [
+              {"$ref": "#/components/schemas/base_category"},
+              {type: :object, properties: {id: {type: :integer}}}
+            ]
           }
         }
       },
@@ -86,14 +103,6 @@ RSpec.configure do |config|
             }
           }
         }
-        # {
-        #   url: "http://{defaultHost}",
-        #   variables: {
-        #     defaultHost: {
-        #       default: "localhost:3000"
-        #     }
-        #   }
-        # }
       ]
     }
   }
