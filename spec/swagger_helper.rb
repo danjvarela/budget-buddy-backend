@@ -85,10 +85,10 @@ RSpec.configure do |config|
       },
       servers: [
         {
-          url: "https://{defaultHost}",
+          url: "{url}",
           variables: {
-            defaultHost: {
-              default: "budget-buddy-backend.fly.dev"
+            url: {
+              default: "https://budget-buddy-backend.fly.dev"
             }
           }
         }
