@@ -4,8 +4,7 @@ class RodauthMain < Rodauth::Rails::Auth
   configure do
     # List of authentication features that are loaded.
     enable :create_account, :verify_account, :verify_account_grace_period,
-      :login, :logout, :remember,
-      :reset_password, :change_password, :change_password_notify, :internal_request,
+      :login, :logout, :reset_password, :change_password, :change_password_notify, :internal_request,
       :change_login, :verify_login_change, :close_account, :omniauth, :active_sessions, :jwt
 
     omniauth_provider :google_oauth2, Rails.application.credentials.google_oauth2["client_id"], Rails.application.credentials.google_oauth2["client_secret"], {
@@ -44,7 +43,7 @@ class RodauthMain < Rodauth::Rails::Auth
     only_json? true
 
     already_an_account_with_this_login_message { "an account with this email already exists" }
-    
+
     login_does_not_meet_requirements_message do
       "invalid email#{", #{login_requirement_message}" if login_requirement_message}"
     end
