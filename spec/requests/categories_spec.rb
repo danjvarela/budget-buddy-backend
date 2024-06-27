@@ -32,9 +32,11 @@ RSpec.describe "Categories", type: :request do
       consumes "application/json"
       produces "application/json"
       security [bearer_auth: []]
+      parameter name: :category_type, in: :query, type: :string, description: "This is type of category to query. It can be `income` or `expense`. The request will return all the categories for the logged in user if this is not specified or its value is null."
 
       response 200, "categories returned" do
         schema type: :array, items: {"$ref" => "#/components/schemas/category"}
+        let(:category_type) { "income" }
         run_test!
       end
     end

@@ -321,6 +321,14 @@ paths:
       - Categories
       security:
       - bearer_auth: []
+      parameters:
+      - name: category_type
+        in: query
+        description: This is type of category to query. It can be `income` or `expense`.
+          The request will return all the categories for the logged in user if this
+          is not specified or its value is null.
+        schema:
+          type: string
       responses:
         '200':
           description: categories returned

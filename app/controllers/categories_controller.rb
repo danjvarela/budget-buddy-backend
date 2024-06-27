@@ -4,7 +4,16 @@ class CategoriesController < ApplicationController
 
   # GET /categories
   def index
-    @categories = Category.all
+    category_type = all_categories_params[:category_type]
+    account_categories = Category.where(account_id: logged_account.id)
+
+    @categories = if category_type == "income"
+      account_categories.income
+    elsif category_type == "expense"
+      account_categories.expense
+    else
+      account_categories.all
+    end
 
     render json: ActiveModelSerializers::SerializableResource.new(@categories).to_json
   end
@@ -52,7 +61,11 @@ class CategoriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def category_params
-    a = params.require(:category).permit(:category_type, :name)
-    {**a, account_id: rodauth.rails_account.id}
+    include_account_id(params.require(:category).permit(:category_type, :name))
+  end
+
+  def all_categories_params
+    Rails.logger.info "params #{params.permit(:category_type)}"
+    include_account_id(params.permit(:category_type))
   end
 end
