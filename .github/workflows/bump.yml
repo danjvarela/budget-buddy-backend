@@ -23,6 +23,7 @@ jobs:
         uses: bump-sh/github-action@v1
         with:
           doc: danvarela
+          token: ${{secrets.BUMP_TOKEN}}
           file: swagger/v1/swagger.yaml
   api-diff:
     if: ${{ github.event_name == 'pull_request' }}
@@ -35,6 +36,7 @@ jobs:
         uses: bump-sh/github-action@v1
         with:
           doc: danvarela
+          token: ${{secrets.BUMP_TOKEN}}
           file: swagger/v1/swagger.yaml
           command: diff
         env:
