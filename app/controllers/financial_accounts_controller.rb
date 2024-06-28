@@ -1,6 +1,5 @@
-class FinancialAccountsController < ApplicationController
+class FinancialAccountsController < ProtectedResourceController
   before_action :set_financial_account, only: %i[show update destroy]
-  before_action :authenticate
 
   # GET /financial_accounts
   def index
