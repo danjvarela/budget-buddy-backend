@@ -12,6 +12,7 @@ require "action_mailbox/engine"
 require "action_text/engine"
 require "action_view/railtie"
 require "action_cable/engine"
+require_relative "../middlewares/snake_case_parameters"
 # require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -44,5 +45,7 @@ module BudgetBuddyBackend
     config.session_store :cookie_store, key: "_budget_buddy_session"
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
+
+    config.middleware.use SnakeCaseParameters
   end
 end
