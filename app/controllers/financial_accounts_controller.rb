@@ -3,7 +3,7 @@ class FinancialAccountsController < ProtectedResourceController
 
   # GET /financial_accounts
   def index
-    @financial_accounts = FinancialAccount.where(account_id: logged_account.id).all
+    @financial_accounts = logged_account.financial_accounts
 
     render json: ActiveModelSerializers::SerializableResource.new(@financial_accounts).to_json
   end
@@ -15,7 +15,7 @@ class FinancialAccountsController < ProtectedResourceController
 
   # POST /financial_accounts
   def create
-    @financial_account = FinancialAccount.new(financial_account_params)
+    @financial_account = logged_account.financial_accounts.new(financial_account_params)
 
     if @financial_account.save
       render json: serialized_financial_account, status: :created
@@ -51,6 +51,6 @@ class FinancialAccountsController < ProtectedResourceController
 
   # Only allow a list of trusted parameters through.
   def financial_account_params
-    include_account_id(params.require(:financial_account).permit(:name, :description, :amount))
+    params.require(:financial_account).permit(:name, :description, :amount)
   end
 end

@@ -3,7 +3,7 @@ class ExpensesController < ProtectedResourceController
 
   # GET /expenses
   def index
-    @expenses = Expense.all
+    @expenses = logged_account.expenses.all
 
     render json: ActiveModelSerializers::SerializableResource.new(@expenses).to_json
   end
@@ -15,7 +15,7 @@ class ExpensesController < ProtectedResourceController
 
   # POST /expenses
   def create
-    @expense = Expense.new(expense_params)
+    @expense = logged_account.expenses.new(expense_params)
 
     if @expense.save
       render json: serialized_expense, status: :created, location: @expense
@@ -51,6 +51,6 @@ class ExpensesController < ProtectedResourceController
 
   # Only allow a list of trusted parameters through.
   def expense_params
-    include_account_id(params.require(:expense).permit(:category_id, :financial_account_id, :amount, :description, :date))
+    params.require(:expense).permit(:category_id, :financial_account_id, :amount, :description, :date)
   end
 end

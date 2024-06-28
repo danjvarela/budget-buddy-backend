@@ -4,14 +4,13 @@ class CategoriesController < ProtectedResourceController
   # GET /categories
   def index
     category_type = all_categories_params[:category_type]
-    account_categories = Category.where(account_id: logged_account.id)
 
     @categories = if category_type == "income"
-      account_categories.income
+      logged_account.categories.income
     elsif category_type == "expense"
-      account_categories.expense
+      logged_account.categories.expense
     else
-      account_categories.all
+      logged_account.categories.all
     end
 
     render json: ActiveModelSerializers::SerializableResource.new(@categories).to_json
@@ -24,7 +23,7 @@ class CategoriesController < ProtectedResourceController
 
   # POST /categories
   def create
-    @category = Category.new(category_params)
+    @category = logged_account.categories.new(category_params)
 
     if @category.save
       render json: serialized_category, status: :created, location: @category
@@ -60,10 +59,10 @@ class CategoriesController < ProtectedResourceController
 
   # Only allow a list of trusted parameters through.
   def category_params
-    include_account_id(params.require(:category).permit(:category_type, :name))
+    params.require(:category).permit(:category_type, :name)
   end
 
   def all_categories_params
-    include_account_id(params.permit(:category_type))
+    params.permit(:category_type)
   end
 end
