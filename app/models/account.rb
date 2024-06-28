@@ -4,4 +4,5 @@ class Account < ApplicationRecord
   enum :status, unverified: 1, verified: 2, closed: 3
   has_many :financial_accounts, dependent: :destroy
   has_many :categories, dependent: :destroy
+  has_many :expenses, dependent: :destroy
 end

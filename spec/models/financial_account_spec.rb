@@ -11,5 +11,6 @@ RSpec.describe FinancialAccount, type: :model do
   context "associations" do
     subject { build(:financial_account) }
     it { should belong_to(:account) }
+    it { should have_many(:expenses).dependent(:destroy) }
   end
 end
