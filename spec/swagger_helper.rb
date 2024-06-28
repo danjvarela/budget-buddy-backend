@@ -53,7 +53,7 @@ RSpec.configure do |config|
             type: :object,
             properties: {
               name: {type: :string},
-              amount: {type: :number, format: :float},
+              amount: {type: :number, format: :double},
               description: {type: :string, nullable: true}
             }
           },
@@ -67,18 +67,55 @@ RSpec.configure do |config|
           base_category: {
             type: :object,
             properties: {
-              category_type: {type: :string, enum: [:income, :expense]},
+              categoryType: {type: :string, enum: [:income, :expense]},
               name: {type: :string}
             }
           },
           create_category_params: {
             allOf: ["$ref": "#/components/schemas/base_category"],
-            required: ["name", "category_type"]
+            required: ["name", "categoryType"]
           },
           category: {
             allOf: [
               {"$ref": "#/components/schemas/base_category"},
               {type: :object, properties: {id: {type: :integer}}}
+            ]
+          },
+          base_expense: {
+            type: :object,
+            properties: {
+              amount: {type: :number, format: :double},
+              description: {type: :string},
+              date: {type: :string}
+            }
+          },
+          create_expense_params: {
+            allOf: [
+              {"$ref": "#/components/schemas/base_expense"},
+              {type: :object, properties: {
+                financialAccountId: {type: :integer},
+                categoryId: {type: :integer}
+              }}
+            ],
+            required: ["amount", "date", "financialAccountId", "categoryId"]
+          },
+          update_expense_params: {
+            allOf: [
+              {"$ref": "#/components/schemas/base_expense"},
+              {type: :object, properties: {
+                financialAccountId: {type: :integer},
+                categoryId: {type: :integer}
+              }}
+            ]
+          },
+          expense: {
+            allOf: [
+              {"$ref": "#/components/schemas/base_expense"},
+              {type: :object, properties: {
+                id: {type: :integer},
+                category: {"$ref": "#/components/schemas/category"},
+                financialAccount: {"$ref": "#/components/schemas/financial_account"}
+              }}
             ]
           }
         }

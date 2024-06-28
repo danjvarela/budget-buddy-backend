@@ -314,7 +314,7 @@ paths:
                 summary: Creates a new category
                 value:
                   name: Transportation
-                  category_type: expense
+                  categoryType: expense
     get:
       summary: Gets all categories associated to the logged in account
       tags:
@@ -411,6 +411,139 @@ paths:
           description: category deleted
         '404':
           description: category not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+  "/expenses":
+    post:
+      summary: Creates a new expense
+      tags:
+      - Expenses
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '201':
+          description: expense created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/expense"
+        '422':
+          description: failed to create expense
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      date:
+                      - can't be blank
+              schema:
+                "$ref": "#/components/schemas/resource_creation_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/create_expense_params"
+            examples:
+              example:
+                summary: Creates a new expense
+                value:
+                  amount: 100.0
+                  description: Dinner
+                  date: '2023-08-25T07:25:59.000Z'
+                  financialAccountId: 1
+                  categoryAccountId: 1
+    get:
+      summary: Gets all expenses associated to the logged in account
+      tags:
+      - Expenses
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: expenses returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/expense"
+  "/expenses/{id}":
+    get:
+      summary: Gets the details of a expense
+      tags:
+      - Expenses
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: expense returned
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/expense"
+        '404':
+          description: expense not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+    put:
+      summary: Updates a expense
+      tags:
+      - Expenses
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: expense updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/expense"
+        '404':
+          description: expense not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/update_expense_params"
+    delete:
+      summary: deletes a expense
+      tags:
+      - Expenses
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: expense deleted
+        '404':
+          description: expense not found
           content:
             application/json:
               schema:
@@ -585,7 +718,7 @@ components:
           type: string
         amount:
           type: number
-          format: float
+          format: double
         description:
           type: string
           nullable: true
@@ -605,7 +738,7 @@ components:
     base_category:
       type: object
       properties:
-        category_type:
+        categoryType:
           type: string
           enum:
           - income
@@ -617,7 +750,7 @@ components:
       - "$ref": "#/components/schemas/base_category"
       required:
       - name
-      - category_type
+      - categoryType
     category:
       allOf:
       - "$ref": "#/components/schemas/base_category"
@@ -625,6 +758,50 @@ components:
         properties:
           id:
             type: integer
+    base_expense:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+        date:
+          type: string
+    create_expense_params:
+      allOf:
+      - "$ref": "#/components/schemas/base_expense"
+      - type: object
+        properties:
+          financialAccountId:
+            type: integer
+          categoryId:
+            type: integer
+      required:
+      - amount
+      - date
+      - financialAccountId
+      - categoryId
+    update_expense_params:
+      allOf:
+      - "$ref": "#/components/schemas/base_expense"
+      - type: object
+        properties:
+          financialAccountId:
+            type: integer
+          categoryId:
+            type: integer
+    expense:
+      allOf:
+      - "$ref": "#/components/schemas/base_expense"
+      - type: object
+        properties:
+          id:
+            type: integer
+          category:
+            "$ref": "#/components/schemas/category"
+          financialAccount:
+            "$ref": "#/components/schemas/financial_account"
 servers:
 - url: "{url}"
   variables:

@@ -15,14 +15,14 @@ RSpec.describe "Financial Accounts", type: :request do
 
       response 201, "financial account created" do
         schema "$ref" => "#/components/schemas/financial_account"
-        let(:financial_account) { attributes_for :financial_account }
+        let(:financial_account) { camelize_keys(attributes_for(:financial_account)) }
         run_test!
       end
 
       response 422, "failed to create financial account" do
         schema "$ref" => "#/components/schemas/resource_creation_error"
         example "application/json", :example, {errors: {name: ["can't be blank"]}}
-        let(:financial_account) { {**attributes_for(:financial_account), name: nil} }
+        let(:financial_account) { camelize_keys({**attributes_for(:financial_account), name: nil}) }
         run_test!
       end
     end

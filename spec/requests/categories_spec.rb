@@ -11,18 +11,18 @@ RSpec.describe "Categories", type: :request do
       produces "application/json"
       parameter name: :category, in: :body, schema: {"$ref" => "#/components/schemas/create_category_params"}
       security [bearer_auth: []]
-      request_body_example value: {name: "Transportation", category_type: "expense"}, name: :example
+      request_body_example value: {name: "Transportation", categoryType: "expense"}, name: :example
 
       response 201, "category created" do
         schema "$ref" => "#/components/schemas/category"
-        let(:category) { attributes_for :category }
+        let(:category) { camelize_keys(attributes_for(:category)) }
         run_test!
       end
 
       response 422, "failed to create category" do
         schema "$ref" => "#/components/schemas/resource_creation_error"
         example "application/json", :example, {errors: {name: ["can't be blank"]}}
-        let(:category) { {**attributes_for(:category), name: nil} }
+        let(:category) { camelize_keys({**attributes_for(:category), name: nil}) }
         run_test!
       end
     end
