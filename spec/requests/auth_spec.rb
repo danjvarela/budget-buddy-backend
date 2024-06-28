@@ -1,4 +1,5 @@
 require "swagger_helper"
+require "auth_context"
 
 RSpec.describe "Authentication", type: :request do
   path "/create-account" do
@@ -8,20 +9,24 @@ RSpec.describe "Authentication", type: :request do
       parameter name: :account, in: :body, schema: {
         type: :object,
         properties: {
-          :email => {type: :string},
-          :password => {type: :string},
-          "password-confirm" => {type: :string}
+          email: {type: :string},
+          password: {type: :string},
+          passwordConfirm: {type: :string}
         },
-        required: ["email", "password", "password-confirm"]
+        required: ["email", "password", "passwordConfirm"]
       }
       request_body_example value: {
         email: "example01@email.com",
         password: "123qwe123",
-        "password-confirm": "123qwe123"
+        passwordConfirm: "123qwe123"
       }
 
       response 200, "unverified account has been created" do
-        skip
+        let(:account) {
+          a = attributes_for :account
+          camelize_keys({**a, passwordConfirm: a[:password]})
+        }
+        run_test!
       end
     end
   end
@@ -39,7 +44,7 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "account has been verified" do
-        skip
+        pending
       end
     end
   end
@@ -48,7 +53,7 @@ RSpec.describe "Authentication", type: :request do
     post "Logs in to an existing, verified account." do
       tags "Authentication"
       consumes "application/json"
-      parameter in: :body, schema: {
+      parameter name: :credentials, in: :body, schema: {
         type: :object,
         properties: {
           email: {type: :string},
@@ -62,7 +67,11 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "user has been logged in" do
-        skip
+        let(:credentials) {
+          a = create :account
+          {email: a.email, password: a.password}
+        }
+        run_test!
       end
     end
   end
@@ -71,7 +80,7 @@ RSpec.describe "Authentication", type: :request do
     post "Logs out the current session. Include the `global_logout` attribute and pass any value to logout of all sessions, otherwise don't include it in the request body." do
       tags "Authentication"
       consumes "application/json"
-      parameter in: :body, schema: {
+      parameter name: :options, in: :body, schema: {
         type: :object,
         properties: {
           global_logout: {type: :string, description: "Include this attribute and pass any value to logout of all sessions, otherwise don't include it in the request body."}
@@ -80,7 +89,9 @@ RSpec.describe "Authentication", type: :request do
       security [bearer_auth: []]
 
       response 200, "user has been logged out" do
-        skip
+        include_context "auth"
+        let(:options) { {} }
+        run_test!
       end
     end
   end
@@ -89,7 +100,7 @@ RSpec.describe "Authentication", type: :request do
     post "Resends account verification email. Note that there is a 5-minute delay between resends." do
       tags "Authentication"
       consumes "application/json"
-      parameter in: :body, schema: {
+      parameter name: :options, in: :body, schema: {
         type: :object,
         properties: {
           email: {type: :string}
@@ -98,7 +109,7 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "email verification has been resent" do
-        skip
+        pending
       end
     end
   end

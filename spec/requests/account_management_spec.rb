@@ -1,11 +1,12 @@
 require "swagger_helper"
+require "auth_context"
 
 RSpec.describe "Authentication", type: :request do
   path "/change-login" do
     post "Requests change of account email. Sends confirmation email to the new email." do
       tags "Account Management"
       consumes "application/json"
-      parameter in: :body, schema: {
+      parameter name: :email_change_params, in: :body, schema: {
         type: :object,
         properties: {
           email: {type: :string, description: "The new email."},
@@ -16,7 +17,14 @@ RSpec.describe "Authentication", type: :request do
       security [bearer_auth: []]
 
       response 200, "change email link has been sent to the new email" do
-        skip
+        include_context "auth"
+        let(:email_change_params) {
+          {
+            email: generate(:account_email),
+            password: logged_account.password
+          }
+        }
+        run_test!
       end
     end
   end
@@ -34,7 +42,7 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "account email has been changed" do
-        skip
+        pending
       end
     end
   end
@@ -43,19 +51,27 @@ RSpec.describe "Authentication", type: :request do
     post "Changes account password. `password` here is the old password." do
       tags "Account Management"
       consumes "application/json"
-      parameter in: :body, schema: {
+      parameter name: :password_details, in: :body, schema: {
         type: :object,
         properties: {
           password: {type: :string, description: "The old password"},
-          "new-password": {type: :string},
-          "password-confirm": {type: :string}
+          newPassword: {type: :string},
+          passwordConfirm: {type: :string}
         },
-        required: ["password", "new-password", "password-confirm"]
+        required: ["password", "newPassword", "passwordConfirm"]
       }
       security [bearer_auth: []]
 
       response 200, "password has been changed" do
-        skip
+        include_context "auth"
+        let(:password_details) {
+          {
+            password: logged_account.password,
+            newPassword: "newPassword123",
+            passwordConfirm: "newPassword123"
+          }
+        }
+        run_test!
       end
     end
   end
@@ -64,7 +80,7 @@ RSpec.describe "Authentication", type: :request do
     post "Requests change of account password. Sends a password reset link to the current email." do
       tags "Account Management"
       consumes "application/json"
-      parameter in: :body, schema: {
+      parameter name: :reset_password_params, in: :body, schema: {
         type: :object,
         properties: {
           email: {type: :string}
@@ -73,7 +89,11 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "password reset link has been sent to the email" do
-        skip
+        include_context "auth"
+        let(:reset_password_params) {
+          {email: logged_account.email}
+        }
+        run_test!
       end
     end
   end
@@ -93,7 +113,7 @@ RSpec.describe "Authentication", type: :request do
       }
 
       response 200, "password reset link has been sent to the email" do
-        skip
+        pending
       end
     end
   end
@@ -102,7 +122,7 @@ RSpec.describe "Authentication", type: :request do
     post "Closes the account. Note that there is not endpoint for reopening the account." do
       tags "Account Management"
       consumes "application/json"
-      parameter in: :body, schema: {
+      parameter name: :close_account_params, in: :body, schema: {
         type: :object,
         properties: {
           password: {type: :string}
@@ -112,7 +132,9 @@ RSpec.describe "Authentication", type: :request do
       security [bearer_auth: []]
 
       response 200, "account has been closed" do
-        skip
+        include_context "auth"
+        let(:close_account_params) { {password: logged_account.password} }
+        run_test!
       end
     end
   end
