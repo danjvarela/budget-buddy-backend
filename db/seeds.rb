@@ -12,4 +12,16 @@
 unless Rails.env.production?
   account = Account.create!(email: "example@email.com", password: "123qwe123")
   account.verified!
+
+  ["Household", "Transportation", "Food", "Health", "Social Life", "Others"].each do |name|
+    Category.create name: name, category_type: "expense", account_id: account.id
+  end
+
+  ["Salary", "Petty Cash", "Allowance", "Others"].each do |name|
+    Category.create name: name, category_type: "income", account_id: account.id
+  end
+
+  ["Cash", "Savings Account", "Digital Wallet"].each do |name|
+    FinancialAccount.create name: name, amount: 0.0, account_id: account.id
+  end
 end
