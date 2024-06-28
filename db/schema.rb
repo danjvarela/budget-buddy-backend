@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_27_171008) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_28_000447) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -70,11 +70,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_171008) do
     t.index ["account_id"], name: "index_categories_on_account_id"
   end
 
+  create_table "expenses", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "category_id", null: false
+    t.bigint "financial_account_id", null: false
+    t.float "amount", default: 0.0, null: false
+    t.string "description"
+    t.datetime "date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_expenses_on_account_id"
+    t.index ["category_id"], name: "index_expenses_on_category_id"
+    t.index ["financial_account_id"], name: "index_expenses_on_financial_account_id"
+  end
+
   create_table "financial_accounts", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "name", null: false
     t.text "description"
-    t.float "amount", null: false
+    t.float "amount", default: 0.0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_financial_accounts_on_account_id"
@@ -87,5 +101,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_171008) do
   add_foreign_key "account_remember_keys", "accounts", column: "id"
   add_foreign_key "account_verification_keys", "accounts", column: "id"
   add_foreign_key "categories", "accounts"
+  add_foreign_key "expenses", "accounts"
+  add_foreign_key "expenses", "categories"
+  add_foreign_key "expenses", "financial_accounts"
   add_foreign_key "financial_accounts", "accounts"
 end
