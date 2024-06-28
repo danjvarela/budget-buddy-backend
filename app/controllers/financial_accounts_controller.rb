@@ -51,6 +51,6 @@ class FinancialAccountsController < ProtectedResourceController
 
   # Only allow a list of trusted parameters through.
   def financial_account_params
-    params.require(:financial_account).permit(:name, :description, :amount)
+    params.require(:financial_account).permit(:name, :description, :initial_amount)
   end
 end

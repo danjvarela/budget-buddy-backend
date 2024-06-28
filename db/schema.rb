@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_28_000447) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_28_134536) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -74,7 +74,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_000447) do
     t.bigint "account_id", null: false
     t.bigint "category_id", null: false
     t.bigint "financial_account_id", null: false
-    t.float "amount", default: 0.0, null: false
+    t.float "amount", default: 0.0
     t.string "description"
     t.datetime "date", null: false
     t.datetime "created_at", null: false
@@ -88,7 +88,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_000447) do
     t.bigint "account_id", null: false
     t.string "name", null: false
     t.text "description"
-    t.float "amount", default: 0.0, null: false
+    t.float "initial_amount", default: 0.0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_financial_accounts_on_account_id"

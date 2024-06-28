@@ -4,7 +4,7 @@ class CreateExpenses < ActiveRecord::Migration[7.1]
       t.references :account, null: false, foreign_key: true
       t.references :category, null: false, foreign_key: true
       t.references :financial_account, null: false, foreign_key: true
-      t.float :amount, null: false, default: 0.0
+      t.float :amount, default: 0.0
       t.string :description
       t.datetime :date, null: false
 

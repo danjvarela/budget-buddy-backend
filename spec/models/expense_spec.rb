@@ -4,7 +4,6 @@ RSpec.describe Category, type: :model do
   context "validations" do
     subject { build(:expense) }
     it { should validate_presence_of(:date) }
-    it { should validate_presence_of(:amount) }
   end
 
   context "associations" do

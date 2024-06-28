@@ -5,7 +5,6 @@ RSpec.describe FinancialAccount, type: :model do
     subject { build(:financial_account) }
     it { should validate_presence_of(:name) }
     it { should validate_uniqueness_of(:name).scoped_to(:account_id).case_insensitive }
-    it { should validate_presence_of(:amount) }
   end
 
   context "associations" do

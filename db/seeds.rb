@@ -14,14 +14,14 @@ unless Rails.env.production?
   account.verified!
 
   ["Household", "Transportation", "Food", "Health", "Social Life", "Others"].each do |name|
-    Category.create name: name, category_type: "expense", account_id: account.id
+    account.categories.create name: name, category_type: "expense"
   end
 
   ["Salary", "Petty Cash", "Allowance", "Others"].each do |name|
-    Category.create name: name, category_type: "income", account_id: account.id
+    account.categories.create name: name, category_type: "income"
   end
 
   ["Cash", "Savings Account", "Digital Wallet"].each do |name|
-    FinancialAccount.create name: name, amount: 0.0, account_id: account.id
+    account.financial_accounts.create name: name
   end
 end

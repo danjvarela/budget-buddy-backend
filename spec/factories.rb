@@ -12,7 +12,6 @@ FactoryBot.define do
   factory :financial_account do
     account { association :account }
     name { generate :financial_account_name }
-    amount { 0.0 }
   end
 
   factory :category do
