@@ -41,7 +41,7 @@ class FinancialAccountsController < ProtectedResourceController
   private
 
   def serialized_financial_account
-    FinancialAccountSerializer.new(@financial_account).serializable_hash
+    ActiveModelSerializers::SerializableResource.new(@financial_account).serializable_hash
   end
 
   # Use callbacks to share common setup or constraints between actions.

@@ -49,7 +49,7 @@ class CategoriesController < ProtectedResourceController
   private
 
   def serialized_category
-    CategorySerializer.new(@category).serializable_hash
+    ActiveModelSerializers::SerializableResource.new(@category).serializable_hash
   end
 
   # Use callbacks to share common setup or constraints between actions.
