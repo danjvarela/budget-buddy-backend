@@ -131,7 +131,12 @@ RSpec.configure do |config|
               {"$ref": "#/components/schemas/income_transaction"},
               {"$ref": "#/components/schemas/transfer_transaction"}
             ],
-            discriminator: :type
+            discriminator: :type,
+            mapping: {
+              expense: "#/components/schemas/expense_transaction",
+              income: "#/components/schemas/income_transaction",
+              transfer: "#/components/schemas/transfer_transaction"
+            }
           }
         }
       },
