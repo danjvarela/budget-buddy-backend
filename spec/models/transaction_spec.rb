@@ -9,6 +9,10 @@ RSpec.describe Transaction, type: :model do
     it { should belong_to(:to_financial_account).with_foreign_key("to_financial_account_id").inverse_of("transfer_transactions_as_receiver").optional.class_name("FinancialAccount") }
   end
 
+  context "common validations" do
+    it { should validate_presence_of(:date) }
+  end
+
   context "transfers validations" do
     it "should have a from_financial_account_id" do
       transaction = build :transfer_transaction, from_financial_account: nil

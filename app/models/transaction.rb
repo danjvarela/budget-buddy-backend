@@ -12,6 +12,7 @@ class Transaction < ApplicationRecord
   validates :from_financial_account, presence: true, if: -> { transfer? }
   validates :to_financial_account, presence: true, if: -> { transfer? }
   validates :financial_account, presence: true, if: -> { income? || expense? }
+  validates :date, presence: true
 
   private
 
