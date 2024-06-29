@@ -20,15 +20,6 @@ FactoryBot.define do
     account { association :account }
   end
 
-  factory :expense do
-    account { association :account }
-    category { association :category }
-    financial_account { association :financial_account }
-    amount { 1.5 }
-    description { "Some Expense" }
-    date { DateTime.new }
-  end
-
   factory :transaction do
     account { association :account }
     from_financial_account { association :financial_account, account: account }

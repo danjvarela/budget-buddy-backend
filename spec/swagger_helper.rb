@@ -80,43 +80,6 @@ RSpec.configure do |config|
               {"$ref": "#/components/schemas/base_category"},
               {type: :object, properties: {id: {type: :integer}}}
             ]
-          },
-          base_expense: {
-            type: :object,
-            properties: {
-              amount: {type: :number, format: :double},
-              description: {type: :string},
-              date: {type: :string}
-            }
-          },
-          create_expense_params: {
-            allOf: [
-              {"$ref": "#/components/schemas/base_expense"},
-              {type: :object, properties: {
-                financialAccountId: {type: :integer},
-                categoryId: {type: :integer}
-              }}
-            ],
-            required: ["amount", "date", "financialAccountId", "categoryId"]
-          },
-          update_expense_params: {
-            allOf: [
-              {"$ref": "#/components/schemas/base_expense"},
-              {type: :object, properties: {
-                financialAccountId: {type: :integer},
-                categoryId: {type: :integer}
-              }}
-            ]
-          },
-          expense: {
-            allOf: [
-              {"$ref": "#/components/schemas/base_expense"},
-              {type: :object, properties: {
-                id: {type: :integer},
-                category: {"$ref": "#/components/schemas/category"},
-                financialAccount: {"$ref": "#/components/schemas/financial_account"}
-              }}
-            ]
           }
         }
       },

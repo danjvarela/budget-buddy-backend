@@ -1,5 +1,4 @@
 class FinancialAccount < ApplicationRecord
-  has_many :expenses, dependent: :destroy
   belongs_to :account
   has_many :transactions_as_origin, foreign_key: "from_financial_account_id", class_name: "Transaction", dependent: :nullify, inverse_of: "from_financial_account"
   has_many :transactions_as_receiver, foreign_key: "to_financial_account_id", class_name: "Transaction", dependent: :nullify, inverse_of: "to_financial_account"

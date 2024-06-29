@@ -1,5 +1,4 @@
 class Category < ApplicationRecord
-  has_many :expenses, dependent: :destroy
   has_many :transactions, dependent: :nullify
   belongs_to :account
   enum :category_type, [:expense, :income]
