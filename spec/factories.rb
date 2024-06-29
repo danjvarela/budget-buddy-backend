@@ -28,4 +28,27 @@ FactoryBot.define do
     description { "Some Expense" }
     date { DateTime.new }
   end
+
+  factory :transaction do
+    account { association :account }
+    from_financial_account { association :financial_account, account: account }
+    to_financial_account { association :financial_account, account: account }
+    date { DateTime.now }
+    amount { 1.5 }
+    description { "Test Transaction" }
+
+    factory :expense_transaction do
+      transaction_type { "expense" }
+      category { association :category, category_type: transaction_type, account: account }
+    end
+
+    factory :income_transaction do
+      transaction_type { "income" }
+      category { association :category, category_type: transaction_type, account: account }
+    end
+
+    factory :transfer_transaction do
+      transaction_type { "transfer" }
+    end
+  end
 end

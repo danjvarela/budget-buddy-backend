@@ -5,4 +5,5 @@ class Account < ApplicationRecord
   has_many :financial_accounts, dependent: :destroy
   has_many :categories, dependent: :destroy
   has_many :expenses, dependent: :destroy
+  has_many :transactions, dependent: :destroy
 end

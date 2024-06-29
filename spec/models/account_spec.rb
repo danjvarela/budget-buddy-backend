@@ -6,5 +6,6 @@ RSpec.describe Account, type: :model do
     it { should have_many(:financial_accounts).dependent(:destroy) }
     it { should have_many(:categories).dependent(:destroy) }
     it { should have_many(:expenses).dependent(:destroy) }
+    it { should have_many(:transactions).dependent(:destroy) }
   end
 end

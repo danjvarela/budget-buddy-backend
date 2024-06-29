@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_28_134536) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_29_122316) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -94,6 +94,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_134536) do
     t.index ["account_id"], name: "index_financial_accounts_on_account_id"
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.integer "transaction_type", null: false
+    t.bigint "account_id", null: false
+    t.bigint "category_id"
+    t.bigint "from_financial_account_id"
+    t.bigint "to_financial_account_id"
+    t.datetime "date", null: false
+    t.float "amount", default: 0.0
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_transactions_on_account_id"
+    t.index ["category_id"], name: "index_transactions_on_category_id"
+    t.index ["from_financial_account_id"], name: "index_transactions_on_from_financial_account_id"
+    t.index ["to_financial_account_id"], name: "index_transactions_on_to_financial_account_id"
+  end
+
   add_foreign_key "account_active_session_keys", "accounts"
   add_foreign_key "account_identities", "accounts", on_delete: :cascade
   add_foreign_key "account_login_change_keys", "accounts", column: "id"
@@ -105,4 +122,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_134536) do
   add_foreign_key "expenses", "categories"
   add_foreign_key "expenses", "financial_accounts"
   add_foreign_key "financial_accounts", "accounts"
+  add_foreign_key "transactions", "accounts"
+  add_foreign_key "transactions", "categories"
+  add_foreign_key "transactions", "financial_accounts", column: "from_financial_account_id"
+  add_foreign_key "transactions", "financial_accounts", column: "to_financial_account_id"
 end
