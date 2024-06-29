@@ -34,6 +34,10 @@ RSpec.configure do |config|
             type: :string,
             enum: [:income, :expense, :transfer]
           },
+          category_type: {
+            type: :string,
+            enum: [:income, :expense, :transfer]
+          },
           resource_creation_error: {
             type: :object,
             properties: {
@@ -71,7 +75,7 @@ RSpec.configure do |config|
           base_category: {
             type: :object,
             properties: {
-              categoryType: {type: :string, enum: [:income, :expense]},
+              categoryType: {"$ref": "#/components/schemas/category_type"},
               name: {type: :string}
             }
           },
@@ -149,6 +153,4 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
-
-  # config.openapi_strict_schema_validation = true
 end
