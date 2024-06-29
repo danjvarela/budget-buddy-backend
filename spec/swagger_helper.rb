@@ -30,6 +30,10 @@ RSpec.configure do |config|
           }
         },
         schemas: {
+          transaction_type: {
+            type: :string,
+            enum: [:income, :expense, :transfer]
+          },
           resource_creation_error: {
             type: :object,
             properties: {
@@ -72,7 +76,7 @@ RSpec.configure do |config|
             }
           },
           create_category_params: {
-            allOf: ["$ref": "#/components/schemas/base_category"],
+            allOf: [{"$ref": "#/components/schemas/base_category"}],
             required: ["name", "categoryType"]
           },
           category: {
@@ -80,6 +84,50 @@ RSpec.configure do |config|
               {"$ref": "#/components/schemas/base_category"},
               {type: :object, properties: {id: {type: :integer}}}
             ]
+          },
+          base_transaction: {
+            type: :object,
+            properties: {
+              date: {type: :string},
+              amount: {type: :number, format: :double},
+              description: {type: :string, nullable: true}
+            }
+          },
+          expense_transaction: {
+            allOf: [
+              {"$ref": "#/components/schemas/base_transaction"},
+              {type: :object, properties: {
+                type: {type: :string, enum: [:expense]},
+                financialAccount: {"$ref": "#/components/schemas/financial_account"}
+              }}
+            ]
+          },
+          income_transaction: {
+            allOf: [
+              {"$ref": "#/components/schemas/base_transaction"},
+              {type: :object, properties: {
+                type: {type: :string, enum: [:income]},
+                financialAccount: {"$ref": "#/components/schemas/financial_account"}
+              }}
+            ]
+          },
+          transfer_transaction: {
+            allOf: [
+              {"$ref": "#/components/schemas/base_transaction"},
+              {type: :object, properties: {
+                type: {type: :string, enum: [:transfer]},
+                fromFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
+                toFinancialAccount: {"$ref": "#/components/schemas/financial_account"}
+              }}
+            ]
+          },
+          transaction: {
+            anyOf: [
+              {"$ref": "#/components/schemas/expense_transaction"},
+              {"$ref": "#/components/schemas/income_transaction"},
+              {"$ref": "#/components/schemas/transfer_transaction"}
+            ],
+            discriminator: :type
           }
         }
       },

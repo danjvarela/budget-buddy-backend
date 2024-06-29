@@ -72,14 +72,14 @@ paths:
                 password:
                   type: string
                   description: The old password
-                new-password:
+                newPassword:
                   type: string
-                password-confirm:
+                passwordConfirm:
                   type: string
               required:
               - password
-              - new-password
-              - password-confirm
+              - newPassword
+              - passwordConfirm
   "/reset-password-request":
     post:
       summary: Requests change of account password. Sends a password reset link to
@@ -170,12 +170,12 @@ paths:
                   type: string
                 password:
                   type: string
-                password-confirm:
+                passwordConfirm:
                   type: string
               required:
               - email
               - password
-              - password-confirm
+              - passwordConfirm
             examples:
               '0':
                 summary: Creates an unverified account. Sends a verification email
@@ -183,7 +183,7 @@ paths:
                 value:
                   email: example01@email.com
                   password: 123qwe123
-                  password-confirm: 123qwe123
+                  passwordConfirm: 123qwe123
   "/verify-account":
     post:
       summary: Verifies an account. The `key` is contained in the link that was sent
@@ -415,139 +415,6 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/resource_not_found_error"
-  "/expenses":
-    post:
-      summary: Creates a new expense
-      tags:
-      - Expenses
-      parameters: []
-      security:
-      - bearer_auth: []
-      responses:
-        '201':
-          description: expense created
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/expense"
-        '422':
-          description: failed to create expense
-          content:
-            application/json:
-              examples:
-                example:
-                  value:
-                    errors:
-                      date:
-                      - can't be blank
-              schema:
-                "$ref": "#/components/schemas/resource_creation_error"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/create_expense_params"
-            examples:
-              example:
-                summary: Creates a new expense
-                value:
-                  amount: 100.0
-                  description: Dinner
-                  date: '2023-08-25T07:25:59.000Z'
-                  financialAccountId: 1
-                  categoryAccountId: 1
-    get:
-      summary: Gets all expenses associated to the logged in account
-      tags:
-      - Expenses
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: expenses returned
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/expense"
-  "/expenses/{id}":
-    get:
-      summary: Gets the details of a expense
-      tags:
-      - Expenses
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: expense returned
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/expense"
-        '404':
-          description: expense not found
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
-    put:
-      summary: Updates a expense
-      tags:
-      - Expenses
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: expense updated
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/expense"
-        '404':
-          description: expense not found
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/update_expense_params"
-    delete:
-      summary: deletes a expense
-      tags:
-      - Expenses
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      security:
-      - bearer_auth: []
-      responses:
-        '204':
-          description: expense deleted
-        '404':
-          description: expense not found
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
   "/financial_accounts":
     post:
       summary: Creates a new financial account
@@ -689,12 +556,52 @@ paths:
       responses:
         '200':
           description: success
+  "/transactions":
+    get:
+      summary: Gets all transactions associated with the currently logged user
+      tags:
+      - Transactions
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/transaction"
+  "/transactions/{id}":
+    delete:
+      summary: Deletes an income, expense, or transfer transaction
+      tags:
+      - Transactions
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: transaction successfully deleted
+        '404':
+          description: transaction not found
 components:
   securitySchemes:
     bearer_auth:
       type: http
       scheme: bearer
   schemas:
+    transaction_type:
+      type: string
+      enum:
+      - income
+      - expense
+      - transfer
     resource_creation_error:
       type: object
       properties:
@@ -758,50 +665,58 @@ components:
         properties:
           id:
             type: integer
-    base_expense:
+    base_transaction:
       type: object
       properties:
+        date:
+          type: string
         amount:
           type: number
           format: double
         description:
           type: string
-        date:
-          type: string
-    create_expense_params:
+          nullable: true
+    expense_transaction:
       allOf:
-      - "$ref": "#/components/schemas/base_expense"
+      - "$ref": "#/components/schemas/base_transaction"
       - type: object
         properties:
-          financialAccountId:
-            type: integer
-          categoryId:
-            type: integer
-      required:
-      - amount
-      - date
-      - financialAccountId
-      - categoryId
-    update_expense_params:
-      allOf:
-      - "$ref": "#/components/schemas/base_expense"
-      - type: object
-        properties:
-          financialAccountId:
-            type: integer
-          categoryId:
-            type: integer
-    expense:
-      allOf:
-      - "$ref": "#/components/schemas/base_expense"
-      - type: object
-        properties:
-          id:
-            type: integer
-          category:
-            "$ref": "#/components/schemas/category"
+          type:
+            type: string
+            enum:
+            - expense
           financialAccount:
             "$ref": "#/components/schemas/financial_account"
+    income_transaction:
+      allOf:
+      - "$ref": "#/components/schemas/base_transaction"
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - income
+          financialAccount:
+            "$ref": "#/components/schemas/financial_account"
+    transfer_transaction:
+      allOf:
+      - "$ref": "#/components/schemas/base_transaction"
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - transfer
+          fromFinancialAccount:
+            "$ref": "#/components/schemas/financial_account"
+          toFinancialAccount:
+            "$ref": "#/components/schemas/financial_account"
+    transaction:
+      anyOf:
+      - "$ref": "#/components/schemas/expense_transaction"
+      - "$ref": "#/components/schemas/income_transaction"
+      - "$ref": "#/components/schemas/transfer_transaction"
+      discriminator: type
 servers:
 - url: "{url}"
   variables:
