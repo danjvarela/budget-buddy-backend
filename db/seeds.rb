@@ -24,4 +24,8 @@ unless Rails.env.production?
   ["Cash", "Savings Account", "Digital Wallet"].each do |name|
     account.financial_accounts.create name: name
   end
+
+  account.transactions.create transaction_type: "expense", amount: 100, description: "Test Transaction", category: account.categories.expense.first, from_financial_account: account.financial_accounts.first, date: DateTime.now
+  account.transactions.create transaction_type: "income", amount: 100, description: "Test Transaction", category: account.categories.income.first, to_financial_account: account.financial_accounts.first, date: DateTime.now
+  account.transactions.create transaction_type: "transfer", amount: 100, description: "Test Transaction", from_financial_account: account.financial_accounts.first, to_financial_account: account.financial_accounts.second, date: DateTime.now
 end
