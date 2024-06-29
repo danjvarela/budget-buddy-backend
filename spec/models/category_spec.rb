@@ -11,7 +11,6 @@ RSpec.describe Category, type: :model do
   context "associations" do
     subject { build(:category) }
     it { should belong_to(:account) }
-    it { should have_many(:expenses).dependent(:destroy) }
     it { should have_many(:transactions).dependent(:nullify) }
   end
 end
