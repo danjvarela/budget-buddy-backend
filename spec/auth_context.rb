@@ -1,10 +1,12 @@
 RSpec.shared_context "auth" do
-  let(:logged_account) {
-    create :account
+  let(:logged_user) {
+    user = create :user
+    user.verified!
+    user
   }
 
   let(:Authorization) {
-    post "/login", params: {email: logged_account.email, password: logged_account.password}, as: :json
+    post "/login", params: {email: logged_user.email, password: logged_user.password}, as: :json
     response.headers["Authorization"]
   }
 end

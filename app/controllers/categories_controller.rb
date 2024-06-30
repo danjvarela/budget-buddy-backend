@@ -6,11 +6,11 @@ class CategoriesController < ProtectedResourceController
     category_type = all_categories_params[:category_type]
 
     @categories = if category_type == "income"
-      logged_account.categories.income
+      current_user.categories.income
     elsif category_type == "expense"
-      logged_account.categories.expense
+      current_user.categories.expense
     else
-      logged_account.categories.all
+      current_user.categories.all
     end
 
     render json: ActiveModelSerializers::SerializableResource.new(@categories).to_json
@@ -23,7 +23,7 @@ class CategoriesController < ProtectedResourceController
 
   # POST /categories
   def create
-    @category = logged_account.categories.new(category_params)
+    @category = current_user.categories.new(category_params)
 
     if @category.save
       render json: serialized_category, status: :created, location: @category

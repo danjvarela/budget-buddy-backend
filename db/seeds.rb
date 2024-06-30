@@ -8,24 +8,23 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# a sample account and verify it
 unless Rails.env.production?
-  account = Account.create!(email: "example@email.com", password: "123qwe123")
-  account.verified!
+  user = User.create!(email: "example@email.com", password: "123qwe123")
+  user.verified!
 
   ["Household", "Transportation", "Food", "Health", "Social Life", "Others"].each do |name|
-    account.categories.create name: name, category_type: "expense"
+    user.categories.create name: name, category_type: "expense"
   end
 
   ["Salary", "Petty Cash", "Allowance", "Others"].each do |name|
-    account.categories.create name: name, category_type: "income"
+    user.categories.create name: name, category_type: "income"
   end
 
   ["Cash", "Savings Account", "Digital Wallet"].each do |name|
-    account.financial_accounts.create name: name
+    user.financial_accounts.create name: name
   end
 
-  account.transactions.create transaction_type: "expense", amount: 100, description: "Test Transaction", category: account.categories.expense.first, financial_account: account.financial_accounts.first, date: DateTime.now
-  account.transactions.create transaction_type: "income", amount: 100, description: "Test Transaction", category: account.categories.income.first, financial_account: account.financial_accounts.first, date: DateTime.now
-  account.transactions.create transaction_type: "transfer", amount: 100, description: "Test Transaction", from_financial_account: account.financial_accounts.first, to_financial_account: account.financial_accounts.second, date: DateTime.now
+  user.transactions.create transaction_type: "expense", amount: 100, description: "Test Transaction", category: user.categories.expense.first, financial_account: user.financial_accounts.first, date: DateTime.now
+  user.transactions.create transaction_type: "income", amount: 100, description: "Test Transaction", category: user.categories.income.first, financial_account: user.financial_accounts.first, date: DateTime.now
+  user.transactions.create transaction_type: "transfer", amount: 100, description: "Test Transaction", from_financial_account: user.financial_accounts.first, to_financial_account: user.financial_accounts.second, date: DateTime.now
 end

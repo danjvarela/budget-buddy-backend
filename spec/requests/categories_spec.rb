@@ -27,7 +27,7 @@ RSpec.describe "Categories", type: :request do
       end
     end
 
-    get "Gets all categories associated to the logged in account" do
+    get "Gets all categories associated to the logged in user" do
       tags "Categories"
       consumes "application/json"
       produces "application/json"
@@ -52,7 +52,7 @@ RSpec.describe "Categories", type: :request do
 
       response 200, "category returned" do
         schema "$ref" => "#/components/schemas/category"
-        let(:id) { create(:category).id }
+        let(:id) { create(:category, user: logged_user).id }
         run_test!
       end
 
@@ -73,7 +73,7 @@ RSpec.describe "Categories", type: :request do
 
       response 200, "category updated" do
         schema "$ref" => "#/components/schemas/category"
-        let(:category) { create :category }
+        let(:category) { create :category, user: logged_user }
         let(:id) { category.id }
         let(:new_attributes) { {name: generate(:category_name)} }
         run_test!
@@ -95,7 +95,7 @@ RSpec.describe "Categories", type: :request do
       security [bearer_auth: []]
 
       response 204, "category deleted" do
-        let(:id) { create(:category).id }
+        let(:id) { create(:category, user: logged_user).id }
         run_test!
       end
 

@@ -20,8 +20,8 @@ RSpec.describe "Authentication", type: :request do
         include_context "auth"
         let(:email_change_params) {
           {
-            email: generate(:account_email),
-            password: logged_account.password
+            email: generate(:user_email),
+            password: logged_user.password
           }
         }
         run_test!
@@ -66,7 +66,7 @@ RSpec.describe "Authentication", type: :request do
         include_context "auth"
         let(:password_details) {
           {
-            password: logged_account.password,
+            password: logged_user.password,
             newPassword: "newPassword123",
             passwordConfirm: "newPassword123"
           }
@@ -91,7 +91,7 @@ RSpec.describe "Authentication", type: :request do
       response 200, "password reset link has been sent to the email" do
         include_context "auth"
         let(:reset_password_params) {
-          {email: logged_account.email}
+          {email: logged_user.email}
         }
         run_test!
       end
@@ -99,7 +99,7 @@ RSpec.describe "Authentication", type: :request do
   end
 
   path "/reset-password" do
-    post "Changes the account password. The `key` is contained in the password reset link that was sent the account email." do
+    post "Changes the account password. The `key` is contained in the password reset link that was sent to the account's email." do
       tags "Account Management"
       consumes "application/json"
       parameter in: :body, schema: {
@@ -107,7 +107,7 @@ RSpec.describe "Authentication", type: :request do
         properties: {
           password: {type: :string},
           "password-confirm": {type: :string},
-          key: {type: :string, description: "The `key` is contained in the password reset link that was sent the account email."}
+          key: {type: :string, description: "The `key` is contained in the password reset link that was sent to the account's email."}
         },
         required: ["password", "password-confirm", "key"]
       }
@@ -133,7 +133,7 @@ RSpec.describe "Authentication", type: :request do
 
       response 200, "account has been closed" do
         include_context "auth"
-        let(:close_account_params) { {password: logged_account.password} }
+        let(:close_account_params) { {password: logged_user.password} }
         run_test!
       end
     end

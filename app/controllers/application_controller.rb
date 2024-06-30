@@ -11,7 +11,7 @@ class ApplicationController < ActionController::API
     rodauth.require_account
   end
 
-  def logged_account
+  def current_user
     rodauth.rails_account
   end
 end

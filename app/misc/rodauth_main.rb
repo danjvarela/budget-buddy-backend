@@ -24,18 +24,23 @@ class RodauthMain < Rodauth::Rails::Auth
     db Sequel.postgres(extensions: :activerecord_connection, keep_reference: false)
 
     # Avoid DB query that checks accounts table schema at boot time.
-    convert_token_id_to_integer? { Account.columns_hash["id"].type == :integer }
+    convert_token_id_to_integer? { User.columns_hash["id"].type == :integer }
 
     # Change prefix of table and foreign key column names from default "account"
-    # accounts_table :users
-    # verify_account_table :user_verification_keys
-    # verify_login_change_table :user_login_change_keys
-    # reset_password_table :user_password_reset_keys
+    accounts_table :users
+    verify_account_table :user_verification_keys
+    verify_login_change_table :user_login_change_keys
+    reset_password_table :user_password_reset_keys
     # remember_table :user_remember_keys
 
     # The secret key used for hashing public-facing tokens for various features.
     # Defaults to Rails `secret_key_base`, but you can use your own secret key.
     # hmac_secret "273669715caef1957ecabcd2030920a61cfe0651a9136d38b7dea63f816a5f3f0bb283da3d5919f3677d80f0c9e80b3a11e41a987ab1809db1f5483e917a65d1"
+    active_sessions_table :user_active_session_keys
+    active_sessions_account_id_column :user_id
+
+    omniauth_identities_table :user_identities
+    omniauth_identities_account_id_column :user_id
 
     jwt_secret { hmac_secret }
 

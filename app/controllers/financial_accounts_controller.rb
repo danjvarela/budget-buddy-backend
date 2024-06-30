@@ -3,7 +3,7 @@ class FinancialAccountsController < ProtectedResourceController
 
   # GET /financial_accounts
   def index
-    @financial_accounts = logged_account.financial_accounts
+    @financial_accounts = current_user.financial_accounts
 
     render json: ActiveModelSerializers::SerializableResource.new(@financial_accounts).to_json
   end
@@ -15,7 +15,7 @@ class FinancialAccountsController < ProtectedResourceController
 
   # POST /financial_accounts
   def create
-    @financial_account = logged_account.financial_accounts.new(financial_account_params)
+    @financial_account = current_user.financial_accounts.new(financial_account_params)
 
     if @financial_account.save
       render json: serialized_financial_account, status: :created

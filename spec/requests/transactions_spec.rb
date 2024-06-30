@@ -27,7 +27,7 @@ RSpec.describe "Transactions", type: :request do
 
       response 204, "transaction successfully deleted" do
         let(:id) {
-          create(:expense_transaction, account: logged_account).id
+          create(:expense_transaction, user: logged_user).id
         }
         run_test!
       end

@@ -3,7 +3,7 @@ class TransactionsController < ProtectedResourceController
 
   # GET /transactions
   def index
-    @transactions = logged_account.transactions
+    @transactions = current_user.transactions
 
     render json: ActiveModelSerializers::SerializableResource.new(@transactions).serializable_hash
   end

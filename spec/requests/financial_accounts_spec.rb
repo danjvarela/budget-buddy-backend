@@ -27,7 +27,7 @@ RSpec.describe "Financial Accounts", type: :request do
       end
     end
 
-    get "Gets all financial accounts associated to the logged in account" do
+    get "Gets all financial accounts associated to the logged in user" do
       tags "Financial Accounts"
       consumes "application/json"
       produces "application/json"
@@ -50,7 +50,7 @@ RSpec.describe "Financial Accounts", type: :request do
 
       response 200, "financial account returned" do
         schema "$ref" => "#/components/schemas/financial_account"
-        let(:id) { create(:financial_account).id }
+        let(:id) { create(:financial_account, user: logged_user).id }
         run_test!
       end
 
@@ -71,7 +71,7 @@ RSpec.describe "Financial Accounts", type: :request do
 
       response 200, "financial account updated" do
         schema "$ref" => "#/components/schemas/financial_account"
-        let(:financial_account) { create :financial_account }
+        let(:financial_account) { create :financial_account, user: logged_user }
         let(:id) { financial_account.id }
         let(:new_attributes) { {name: generate(:financial_account_name)} }
         run_test!
@@ -93,7 +93,7 @@ RSpec.describe "Financial Accounts", type: :request do
       security [bearer_auth: []]
 
       response 204, "financial account deleted" do
-        let(:id) { create(:financial_account).id }
+        let(:id) { create(:financial_account, user: logged_user).id }
         run_test!
       end
 

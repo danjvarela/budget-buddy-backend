@@ -23,7 +23,7 @@ RSpec.describe "Authentication", type: :request do
 
       response 200, "unverified account has been created" do
         let(:account) {
-          a = attributes_for :account
+          a = attributes_for :user
           camelize_keys({**a, passwordConfirm: a[:password]})
         }
         run_test!
@@ -68,7 +68,7 @@ RSpec.describe "Authentication", type: :request do
 
       response 200, "user has been logged in" do
         let(:credentials) {
-          a = create :account
+          a = create :user
           {email: a.email, password: a.password}
         }
         run_test!

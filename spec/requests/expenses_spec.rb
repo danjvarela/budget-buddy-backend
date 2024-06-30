@@ -22,9 +22,9 @@ RSpec.describe "Expenses", type: :request do
       response 201, "expense transaction created" do
         schema "$ref" => "#/components/schemas/expense_transaction"
         let(:expense) {
-          financial_account = create :financial_account, account: logged_account
-          category = create :category, account: logged_account
-          a = attributes_for :expense_transaction, account_id: logged_account.id, financial_account_id: financial_account.id, category_id: category.id
+          financial_account = create :financial_account, user: logged_user
+          category = create :category, user: logged_user
+          a = attributes_for :expense_transaction, user_id: logged_user.id, financial_account_id: financial_account.id, category_id: category.id
           camelize_keys(a)
         }
 
@@ -35,15 +35,15 @@ RSpec.describe "Expenses", type: :request do
         schema "$ref" => "#/components/schemas/resource_creation_error"
         example "application/json", :example, {errors: {category_id: ["can't be blank"]}}
         let(:expense) {
-          financial_account = create :financial_account, account: logged_account
-          a = attributes_for :expense_transaction, account_id: logged_account.id, financial_account_id: financial_account.id, category_id: nil
+          financial_account = create :financial_account, user: logged_user
+          a = attributes_for :expense_transaction, user_id: logged_user.id, financial_account_id: financial_account.id, category_id: nil
           camelize_keys(a)
         }
         run_test!
       end
     end
 
-    get "Gets all expense transactions associated to the logged in account" do
+    get "Gets all expense transactions associated to the logged in user" do
       tags "Expenses"
       consumes "application/json"
       produces "application/json"
@@ -66,7 +66,7 @@ RSpec.describe "Expenses", type: :request do
 
       response 200, "expense transaction returned" do
         schema "$ref" => "#/components/schemas/expense_transaction"
-        let(:id) { create(:expense_transaction, account: logged_account).id }
+        let(:id) { create(:expense_transaction, user: logged_user).id }
         run_test!
       end
 
@@ -87,7 +87,7 @@ RSpec.describe "Expenses", type: :request do
 
       response 200, "expense updated" do
         schema "$ref" => "#/components/schemas/expense_transaction"
-        let(:expense) { create(:expense_transaction, account: logged_account) }
+        let(:expense) { create(:expense_transaction, user: logged_user) }
         let(:id) { expense.id }
         let(:new_attributes) { {amount: expense.amount + 1} }
         run_test!
@@ -109,7 +109,7 @@ RSpec.describe "Expenses", type: :request do
       security [bearer_auth: []]
 
       response 204, "expense deleted" do
-        let(:id) { create(:expense_transaction, account: logged_account).id }
+        let(:id) { create(:expense_transaction, user: logged_user).id }
         run_test!
       end
 

@@ -1,6 +1,6 @@
 class Transaction < ApplicationRecord
   before_save :set_nil_attributes
-  belongs_to :account
+  belongs_to :user
   belongs_to :category, optional: true
   belongs_to :financial_account, optional: true
   belongs_to :from_financial_account, foreign_key: "from_financial_account_id", inverse_of: "transfer_transactions_as_origin", optional: true, class_name: "FinancialAccount"

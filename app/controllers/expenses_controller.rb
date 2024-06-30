@@ -2,13 +2,13 @@ class ExpensesController < ProtectedResourceController
   before_action :set_expense, only: [:show, :update, :destroy]
 
   def index
-    @expenses = logged_account.transactions.expense
+    @expenses = current_user.transactions.expense
 
     render json: ActiveModelSerializers::SerializableResource.new(@expenses).serializable_hash
   end
 
   def create
-    @expense = logged_account.transactions.new({**expense_params, transaction_type: "expense"})
+    @expense = current_user.transactions.new({**expense_params, transaction_type: "expense"})
 
     if @expense.save
       render json: serialized_expense, status: :created
