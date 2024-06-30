@@ -5,7 +5,7 @@ RSpec.describe "Expenses", type: :request do
   include_context "auth"
 
   path "/expenses" do
-    post "Creates a new expense" do
+    post "Creates a new expense transaction" do
       tags "Expenses"
       consumes "application/json"
       produces "application/json"

@@ -1,155 +1,9 @@
 ---
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: Budget Buddy API
   version: v1
 paths:
-  "/change-login":
-    post:
-      summary: Requests change of account email. Sends confirmation email to the new
-        email.
-      tags:
-      - Account Management
-      parameters: []
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: change email link has been sent to the new email
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  description: The new email.
-                password:
-                  type: string
-              required:
-              - email
-              - password
-  "/verify-login-change":
-    post:
-      summary: Changes the account email. The `key` is contained in the link that
-        was sent to the new email when the change of email was requested.
-      tags:
-      - Account Management
-      parameters: []
-      responses:
-        '200':
-          description: account email has been changed
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                key:
-                  type: string
-                  description: The `key` is contained in the link that was sent to
-                    the new email when the change of email was requested.
-              required:
-              - key
-  "/change-password":
-    post:
-      summary: Changes account password. `password` here is the old password.
-      tags:
-      - Account Management
-      parameters: []
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: password has been changed
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                password:
-                  type: string
-                  description: The old password
-                newPassword:
-                  type: string
-                passwordConfirm:
-                  type: string
-              required:
-              - password
-              - newPassword
-              - passwordConfirm
-  "/reset-password-request":
-    post:
-      summary: Requests change of account password. Sends a password reset link to
-        the current email.
-      tags:
-      - Account Management
-      parameters: []
-      responses:
-        '200':
-          description: password reset link has been sent to the email
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-              required:
-              - email
-  "/reset-password":
-    post:
-      summary: Changes the account password. The `key` is contained in the password
-        reset link that was sent the account email.
-      tags:
-      - Account Management
-      parameters: []
-      responses:
-        '200':
-          description: password reset link has been sent to the email
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                password:
-                  type: string
-                password-confirm:
-                  type: string
-                key:
-                  type: string
-                  description: The `key` is contained in the password reset link that
-                    was sent the account email.
-              required:
-              - password
-              - password-confirm
-              - key
-  "/close-account":
-    post:
-      summary: Closes the account. Note that there is not endpoint for reopening the
-        account.
-      tags:
-      - Account Management
-      parameters: []
-      security:
-      - bearer_auth: []
-      responses:
-        '200':
-          description: account has been closed
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                password:
-                  type: string
-              required:
-              - password
   "/create-account":
     post:
       summary: Creates an unverified account. Sends a verification email to the provided
@@ -316,7 +170,7 @@ paths:
                   name: Transportation
                   categoryType: expense
     get:
-      summary: Gets all categories associated to the logged in account
+      summary: Gets all categories associated to the logged in user
       tags:
       - Categories
       security:
@@ -393,7 +247,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/base_category"
+              "$ref": "#/components/schemas/update_category_params"
     delete:
       summary: deletes a category
       tags:
@@ -417,7 +271,7 @@ paths:
                 "$ref": "#/components/schemas/resource_not_found_error"
   "/expenses":
     post:
-      summary: Creates a new expense
+      summary: Creates a new expense transaction
       tags:
       - Expenses
       parameters: []
@@ -449,7 +303,7 @@ paths:
               "$ref": "#/components/schemas/create_expense_params"
             examples:
               example:
-                summary: Creates a new expense
+                summary: Creates a new expense transaction
                 value:
                   financialAccountId: 1
                   categoryId: 1
@@ -457,7 +311,7 @@ paths:
                   amount: 190.0
                   date: '2023-12-18T04:09:53.000Z'
     get:
-      summary: Gets all expense transactions associated to the logged in account
+      summary: Gets all expense transactions associated to the logged in user
       tags:
       - Expenses
       security:
@@ -588,7 +442,7 @@ paths:
                   amount: 30.0
                   description: Cash on hand
     get:
-      summary: Gets all financial accounts associated to the logged in account
+      summary: Gets all financial accounts associated to the logged in user
       tags:
       - Financial Accounts
       security:
@@ -657,7 +511,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/base_financial_account"
+              "$ref": "#/components/schemas/update_financial_account_params"
     delete:
       summary: deletes a financial account
       tags:
@@ -675,6 +529,139 @@ paths:
           description: financial account deleted
         '404':
           description: financial account not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+  "/incomes":
+    post:
+      summary: Creates a new income transaction
+      tags:
+      - incomes
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '201':
+          description: income transaction created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/income_transaction"
+        '422':
+          description: failed to create income transaction
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      category_id:
+                      - can't be blank
+              schema:
+                "$ref": "#/components/schemas/resource_creation_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/create_income_params"
+            examples:
+              example:
+                summary: Creates a new income transaction
+                value:
+                  financialAccountId: 1
+                  categoryId: 1
+                  description: Salar
+                  amount: 190.0
+                  date: '2023-12-18T04:09:53.000Z'
+    get:
+      summary: Gets all income transactions associated to the logged in user
+      tags:
+      - incomes
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: income transactions returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/income_transaction"
+  "/incomes/{id}":
+    get:
+      summary: Gets the details of an income transaction
+      tags:
+      - incomes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: income transaction returned
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/income_transaction"
+        '404':
+          description: income not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+    put:
+      summary: Updates an income transaction
+      tags:
+      - incomes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: income updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/income_transaction"
+        '404':
+          description: income not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/update_income_params"
+    delete:
+      summary: deletes a income
+      tags:
+      - incomes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: income deleted
+        '404':
+          description: income not found
           content:
             application/json:
               schema:
@@ -723,6 +710,152 @@ paths:
           description: transaction successfully deleted
         '404':
           description: transaction not found
+  "/change-login":
+    post:
+      summary: Requests change of account email. Sends confirmation email to the new
+        email.
+      tags:
+      - Account Management
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: change email link has been sent to the new email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The new email.
+                password:
+                  type: string
+              required:
+              - email
+              - password
+  "/verify-login-change":
+    post:
+      summary: Changes the account email. The `key` is contained in the link that
+        was sent to the new email when the change of email was requested.
+      tags:
+      - Account Management
+      parameters: []
+      responses:
+        '200':
+          description: account email has been changed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: The `key` is contained in the link that was sent to
+                    the new email when the change of email was requested.
+              required:
+              - key
+  "/change-password":
+    post:
+      summary: Changes account password. `password` here is the old password.
+      tags:
+      - Account Management
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: password has been changed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: The old password
+                newPassword:
+                  type: string
+                passwordConfirm:
+                  type: string
+              required:
+              - password
+              - newPassword
+              - passwordConfirm
+  "/reset-password-request":
+    post:
+      summary: Requests change of account password. Sends a password reset link to
+        the current email.
+      tags:
+      - Account Management
+      parameters: []
+      responses:
+        '200':
+          description: password reset link has been sent to the email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+              - email
+  "/reset-password":
+    post:
+      summary: Changes the account password. The `key` is contained in the password
+        reset link that was sent to the account's email.
+      tags:
+      - Account Management
+      parameters: []
+      responses:
+        '200':
+          description: password reset link has been sent to the email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                password-confirm:
+                  type: string
+                key:
+                  type: string
+                  description: The `key` is contained in the password reset link that
+                    was sent to the account's email.
+              required:
+              - password
+              - password-confirm
+              - key
+  "/close-account":
+    post:
+      summary: Closes the account. Note that there is not endpoint for reopening the
+        account.
+      tags:
+      - Account Management
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: account has been closed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+              required:
+              - password
 components:
   securitySchemes:
     bearer_auth:
@@ -757,7 +890,7 @@ components:
       properties:
         error:
           type: string
-    base_financial_account:
+    create_financial_account_params:
       type: object
       properties:
         name:
@@ -768,19 +901,32 @@ components:
         description:
           type: string
           nullable: true
-    create_financial_account_params:
-      allOf:
-      - "$ref": "#/components/schemas/base_financial_account"
       required:
       - name
       - initialAmount
+    update_financial_account_params:
+      type: object
+      properties:
+        name:
+          type: string
+        initialAmount:
+          type: number
+          format: double
+        description:
+          type: string
     financial_account:
-      "$merge":
-      - "$ref": "#/components/schemas/base_financial_account"
-      - type: object
-        properties:
-          id:
-            type: integer
+      type: object
+      properties:
+        name:
+          type: string
+        initialAmount:
+          type: number
+          format: double
+        description:
+          type: string
+          nullable: true
+        id:
+          type: integer
     base_category:
       type: object
       properties:
@@ -789,18 +935,31 @@ components:
         name:
           type: string
     create_category_params:
-      allOf:
-      - "$ref": "#/components/schemas/base_category"
+      type: object
+      properties:
+        categoryType:
+          "$ref": "#/components/schemas/category_type"
+        name:
+          type: string
       required:
       - name
       - categoryType
+    update_category_params:
+      type: object
+      properties:
+        categoryType:
+          "$ref": "#/components/schemas/category_type"
+        name:
+          type: string
     category:
-      "$merge":
-      - "$ref": "#/components/schemas/base_category"
-      - type: object
-        properties:
-          id:
-            type: integer
+      type: object
+      properties:
+        categoryType:
+          "$ref": "#/components/schemas/category_type"
+        name:
+          type: string
+        id:
+          type: integer
     base_transaction:
       type: object
       properties:
@@ -813,44 +972,62 @@ components:
           type: string
           nullable: true
     expense_transaction:
-      "$merge":
-      - "$ref": "#/components/schemas/base_transaction"
-      - type: object
-        properties:
-          transactionType:
-            type: string
-          financialAccount:
-            "$ref": "#/components/schemas/financial_account"
-          category:
-            "$ref": "#/components/schemas/category"
-          id:
-            type: integer
+      type: object
+      properties:
+        date:
+          type: string
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+          nullable: true
+        transactionType:
+          type: string
+        financialAccount:
+          "$ref": "#/components/schemas/financial_account"
+        category:
+          "$ref": "#/components/schemas/category"
+        id:
+          type: integer
     income_transaction:
-      "$merge":
-      - "$ref": "#/components/schemas/base_transaction"
-      - type: object
-        properties:
-          transactionType:
-            type: string
-          financialAccount:
-            "$ref": "#/components/schemas/financial_account"
-          category:
-            "$ref": "#/components/schemas/category"
-          id:
-            type: integer
+      type: object
+      properties:
+        date:
+          type: string
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+          nullable: true
+        transactionType:
+          type: string
+        financialAccount:
+          "$ref": "#/components/schemas/financial_account"
+        category:
+          "$ref": "#/components/schemas/category"
+        id:
+          type: integer
     transfer_transaction:
-      "$merge":
-      - "$ref": "#/components/schemas/base_transaction"
-      - type: object
-        properties:
-          transactionType:
-            type: string
-          fromFinancialAccount:
-            "$ref": "#/components/schemas/financial_account"
-          toFinancialAccount:
-            "$ref": "#/components/schemas/financial_account"
-          id:
-            type: integer
+      type: object
+      properties:
+        date:
+          type: string
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+          nullable: true
+        transactionType:
+          type: string
+        fromFinancialAccount:
+          "$ref": "#/components/schemas/financial_account"
+        toFinancialAccount:
+          "$ref": "#/components/schemas/financial_account"
+        id:
+          type: integer
     transaction:
       oneOf:
       - "$ref": "#/components/schemas/expense_transaction"
@@ -863,28 +1040,46 @@ components:
           income: "#/components/schemas/income_transaction"
           transfer: "#/components/schemas/transfer_transaction"
     create_expense_params:
-      "$merge":
-      - "$ref": "#/components/schemas/base_transaction"
-      - type: object
-        properties:
-          financialAccountId:
-            type: integer
-          categoryId:
-            type: integer
+      type: object
+      properties:
+        date:
+          type: string
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+          nullable: true
+        financialAccountId:
+          type: integer
+        categoryId:
+          type: integer
       required:
       - financialAccountId
       - categoryId
       - amount
       - date
     update_expense_params:
-      "$merge":
-      - "$ref": "#/components/schemas/base_transaction"
-      - type: object
-        properties:
-          financialAccountId:
-            type: integer
-          categoryId:
-            type: integer
+      type: object
+      properties:
+        date:
+          type: string
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+          nullable: true
+        financialAccountId:
+          type: integer
+        categoryId:
+          type: integer
+    create_income_params:
+      allOf:
+      - "$ref": "#/components/schemas/create_expense_params"
+    update_income_params:
+      allOf:
+      - "$ref": "#/components/schemas/update_expense_params"
 servers:
 - url: "{url}"
   variables:

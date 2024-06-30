@@ -16,7 +16,7 @@ RSpec.configure do |config|
   # the root example_group in your specs, e.g. describe '...', openapi_spec: 'v2/swagger.json'
   config.openapi_specs = {
     "v1/swagger.yaml" => {
-      openapi: "3.0.1",
+      openapi: "3.1.0",
       info: {
         title: "Budget Buddy API",
         version: "v1"
@@ -57,20 +57,31 @@ RSpec.configure do |config|
               error: {type: :string}
             }
           },
-          base_financial_account: {
+          create_financial_account_params: {
             type: :object,
             properties: {
               name: {type: :string},
               initialAmount: {type: :number, format: :double},
               description: {type: :string, nullable: true}
-            }
-          },
-          create_financial_account_params: {
-            allOf: [{"$ref": "#/components/schemas/base_financial_account"}],
+            },
             required: ["name", "initialAmount"]
           },
+          update_financial_account_params: {
+            type: :object,
+            properties: {
+              name: {type: :string},
+              initialAmount: {type: :number, format: :double},
+              description: {type: :string}
+            }
+          },
           financial_account: {
-            "$merge": [{"$ref": "#/components/schemas/base_financial_account"}, {type: :object, properties: {id: {type: :integer}}}]
+            type: :object,
+            properties: {
+              name: {type: :string},
+              initialAmount: {type: :number, format: :double},
+              description: {type: :string, nullable: true},
+              id: {type: :integer}
+            }
           },
           base_category: {
             type: :object,
@@ -80,14 +91,27 @@ RSpec.configure do |config|
             }
           },
           create_category_params: {
-            allOf: [{"$ref": "#/components/schemas/base_category"}],
+            type: :object,
+            properties: {
+              categoryType: {"$ref": "#/components/schemas/category_type"},
+              name: {type: :string}
+            },
             required: ["name", "categoryType"]
           },
+          update_category_params: {
+            type: :object,
+            properties: {
+              categoryType: {"$ref": "#/components/schemas/category_type"},
+              name: {type: :string}
+            }
+          },
           category: {
-            "$merge": [
-              {"$ref": "#/components/schemas/base_category"},
-              {type: :object, properties: {id: {type: :integer}}}
-            ]
+            type: :object,
+            properties: {
+              categoryType: {"$ref": "#/components/schemas/category_type"},
+              name: {type: :string},
+              id: {type: :integer}
+            }
           },
           base_transaction: {
             type: :object,
@@ -98,37 +122,40 @@ RSpec.configure do |config|
             }
           },
           expense_transaction: {
-            "$merge": [
-              {"$ref": "#/components/schemas/base_transaction"},
-              {type: :object, properties: {
-                transactionType: {type: :string},
-                financialAccount: {"$ref": "#/components/schemas/financial_account"},
-                category: {"$ref": "#/components/schemas/category"},
-                id: {type: :integer}
-              }}
-            ]
+            type: :object,
+            properties: {
+              date: {type: :string},
+              amount: {type: :number, format: :double},
+              description: {type: :string, nullable: true},
+              transactionType: {type: :string},
+              financialAccount: {"$ref": "#/components/schemas/financial_account"},
+              category: {"$ref": "#/components/schemas/category"},
+              id: {type: :integer}
+            }
           },
           income_transaction: {
-            "$merge": [
-              {"$ref": "#/components/schemas/base_transaction"},
-              {type: :object, properties: {
-                transactionType: {type: :string},
-                financialAccount: {"$ref": "#/components/schemas/financial_account"},
-                category: {"$ref": "#/components/schemas/category"},
-                id: {type: :integer}
-              }}
-            ]
+            type: :object,
+            properties: {
+              date: {type: :string},
+              amount: {type: :number, format: :double},
+              description: {type: :string, nullable: true},
+              transactionType: {type: :string},
+              financialAccount: {"$ref": "#/components/schemas/financial_account"},
+              category: {"$ref": "#/components/schemas/category"},
+              id: {type: :integer}
+            }
           },
           transfer_transaction: {
-            "$merge": [
-              {"$ref": "#/components/schemas/base_transaction"},
-              {type: :object, properties: {
-                transactionType: {type: :string},
-                fromFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
-                toFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
-                id: {type: :integer}
-              }}
-            ]
+            type: :object,
+            properties: {
+              date: {type: :string},
+              amount: {type: :number, format: :double},
+              description: {type: :string, nullable: true},
+              transactionType: {type: :string},
+              fromFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
+              toFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
+              id: {type: :integer}
+            }
           },
           transaction: {
             oneOf: [
@@ -146,23 +173,31 @@ RSpec.configure do |config|
             }
           },
           create_expense_params: {
-            "$merge": [
-              {"$ref": "#/components/schemas/base_transaction"},
-              {type: :object, properties: {
-                financialAccountId: {type: :integer},
-                categoryId: {type: :integer}
-              }}
-            ],
+            type: :object,
+            properties: {
+              date: {type: :string},
+              amount: {type: :number, format: :double},
+              description: {type: :string, nullable: true},
+              financialAccountId: {type: :integer},
+              categoryId: {type: :integer}
+            },
             required: ["financialAccountId", "categoryId", "amount", "date"]
           },
           update_expense_params: {
-            "$merge": [
-              {"$ref": "#/components/schemas/base_transaction"},
-              {type: :object, properties: {
-                financialAccountId: {type: :integer},
-                categoryId: {type: :integer}
-              }}
-            ]
+            type: :object,
+            properties: {
+              date: {type: :string},
+              amount: {type: :number, format: :double},
+              description: {type: :string, nullable: true},
+              financialAccountId: {type: :integer},
+              categoryId: {type: :integer}
+            }
+          },
+          create_income_params: {
+            allOf: [{"$ref": "#/components/schemas/create_expense_params"}]
+          },
+          update_income_params: {
+            allOf: [{"$ref": "#/components/schemas/update_expense_params"}]
           }
         }
       },

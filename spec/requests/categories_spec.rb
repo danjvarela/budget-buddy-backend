@@ -68,7 +68,7 @@ RSpec.describe "Categories", type: :request do
       consumes "application/json"
       produces "application/json"
       parameter name: :id, in: :path, type: :integer
-      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/base_category"}
+      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/update_category_params"}
       security [bearer_auth: []]
 
       response 200, "category updated" do
