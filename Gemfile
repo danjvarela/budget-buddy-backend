@@ -68,3 +68,5 @@ gem "active_model_serializers", "~> 0.10.0"
 gem "dockerfile-rails", ">= 1.6", :group => :development
 
 gem "mailtrap", "~> 2.0"
+
+gem "pundit", "~> 2.3"
