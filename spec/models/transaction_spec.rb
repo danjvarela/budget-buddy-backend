@@ -56,6 +56,12 @@ RSpec.describe Transaction, type: :model do
       transaction.save
       expect(transaction.to_financial_account).to be nil
     end
+
+    it "should have consistent type with its associated category" do
+      transaction = build :income_transaction
+      transaction.category = create :category, account: transaction.account, category_type: "expense"
+      expect(transaction.save).to be false
+    end
   end
 
   context "expense validations" do
@@ -81,6 +87,12 @@ RSpec.describe Transaction, type: :model do
       transaction.to_financial_account = create :financial_account, account: transaction.account
       transaction.save
       expect(transaction.to_financial_account).to be nil
+    end
+
+    it "should have consistent type with its associated category" do
+      transaction = build :expense_transaction
+      transaction.category = create :category, account: transaction.account, category_type: "income"
+      expect(transaction.save).to be false
     end
   end
 end

@@ -13,6 +13,7 @@ class Transaction < ApplicationRecord
   validates :to_financial_account, presence: true, if: -> { transfer? }
   validates :financial_account, presence: true, if: -> { income? || expense? }
   validates :date, presence: true
+  validate :ensure_consistent_type
 
   private
 
@@ -24,6 +25,12 @@ class Transaction < ApplicationRecord
     if income? || expense?
       self.from_financial_account = nil
       self.to_financial_account = nil
+    end
+  end
+
+  def ensure_consistent_type
+    if (income? || expense?) && category.present? && (category.category_type != transaction_type)
+      errors.add(:category_id, "must have the same type as the transaction")
     end
   end
 end
