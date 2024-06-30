@@ -4,7 +4,7 @@ RSpec.describe Category, type: :model do
   context "validations" do
     subject { build(:category) }
     it { should validate_presence_of(:name) }
-    it { should validate_uniqueness_of(:name).scoped_to(:user_id).case_insensitive }
+    it { should validate_uniqueness_of(:name).scoped_to([:user_id, :category_type]).case_insensitive }
     it { should validate_presence_of(:category_type) }
   end
 
