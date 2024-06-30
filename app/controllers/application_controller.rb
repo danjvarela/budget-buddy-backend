@@ -4,7 +4,7 @@ class ApplicationController < ActionController::API
   private
 
   def render_not_found
-    render json: {errors: "resource not found"}, status: :not_found
+    render json: {error: "resource not found"}, status: :not_found
   end
 
   def authenticate

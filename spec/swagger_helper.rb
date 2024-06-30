@@ -61,16 +61,16 @@ RSpec.configure do |config|
             type: :object,
             properties: {
               name: {type: :string},
-              amount: {type: :number, format: :double},
+              initialAmount: {type: :number, format: :double},
               description: {type: :string, nullable: true}
             }
           },
           create_financial_account_params: {
             allOf: [{"$ref": "#/components/schemas/base_financial_account"}],
-            required: ["name", "amount"]
+            required: ["name", "initialAmount"]
           },
           financial_account: {
-            allOf: [{"$ref": "#/components/schemas/base_financial_account"}, {type: :object, properties: {id: {type: :integer}}}]
+            "$merge": [{"$ref": "#/components/schemas/base_financial_account"}, {type: :object, properties: {id: {type: :integer}}}]
           },
           base_category: {
             type: :object,
@@ -84,7 +84,7 @@ RSpec.configure do |config|
             required: ["name", "categoryType"]
           },
           category: {
-            allOf: [
+            "$merge": [
               {"$ref": "#/components/schemas/base_category"},
               {type: :object, properties: {id: {type: :integer}}}
             ]
@@ -98,45 +98,71 @@ RSpec.configure do |config|
             }
           },
           expense_transaction: {
-            allOf: [
+            "$merge": [
               {"$ref": "#/components/schemas/base_transaction"},
               {type: :object, properties: {
-                type: {type: :string, enum: [:expense]},
-                financialAccount: {"$ref": "#/components/schemas/financial_account"}
+                transactionType: {type: :string},
+                financialAccount: {"$ref": "#/components/schemas/financial_account"},
+                category: {"$ref": "#/components/schemas/category"},
+                id: {type: :integer}
               }}
             ]
           },
           income_transaction: {
-            allOf: [
+            "$merge": [
               {"$ref": "#/components/schemas/base_transaction"},
               {type: :object, properties: {
-                type: {type: :string, enum: [:income]},
-                financialAccount: {"$ref": "#/components/schemas/financial_account"}
+                transactionType: {type: :string},
+                financialAccount: {"$ref": "#/components/schemas/financial_account"},
+                category: {"$ref": "#/components/schemas/category"},
+                id: {type: :integer}
               }}
             ]
           },
           transfer_transaction: {
-            allOf: [
+            "$merge": [
               {"$ref": "#/components/schemas/base_transaction"},
               {type: :object, properties: {
-                type: {type: :string, enum: [:transfer]},
+                transactionType: {type: :string},
                 fromFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
-                toFinancialAccount: {"$ref": "#/components/schemas/financial_account"}
+                toFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
+                id: {type: :integer}
               }}
             ]
           },
           transaction: {
-            anyOf: [
+            oneOf: [
               {"$ref": "#/components/schemas/expense_transaction"},
               {"$ref": "#/components/schemas/income_transaction"},
               {"$ref": "#/components/schemas/transfer_transaction"}
             ],
-            discriminator: :type,
-            mapping: {
-              expense: "#/components/schemas/expense_transaction",
-              income: "#/components/schemas/income_transaction",
-              transfer: "#/components/schemas/transfer_transaction"
+            discriminator: {
+              propertyName: :transactionType,
+              mapping: {
+                expense: "#/components/schemas/expense_transaction",
+                income: "#/components/schemas/income_transaction",
+                transfer: "#/components/schemas/transfer_transaction"
+              }
             }
+          },
+          create_expense_params: {
+            "$merge": [
+              {"$ref": "#/components/schemas/base_transaction"},
+              {type: :object, properties: {
+                financialAccountId: {type: :integer},
+                categoryId: {type: :integer}
+              }}
+            ],
+            required: ["financialAccountId", "categoryId", "amount", "date"]
+          },
+          update_expense_params: {
+            "$merge": [
+              {"$ref": "#/components/schemas/base_transaction"},
+              {type: :object, properties: {
+                financialAccountId: {type: :integer},
+                categoryId: {type: :integer}
+              }}
+            ]
           }
         }
       },
@@ -158,4 +184,6 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
+
+  config.openapi_strict_schema_validation = true
 end
