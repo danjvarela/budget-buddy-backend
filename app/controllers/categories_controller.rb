@@ -3,14 +3,18 @@ class CategoriesController < ProtectedResourceController
 
   # GET /categories
   def index
+    authorize Category
+
     category_type = all_categories_params[:category_type]
 
+    scoped_categories = policy_scope(Category)
+
     @categories = if category_type == "income"
-      current_user.categories.income
+      scoped_categories.income
     elsif category_type == "expense"
-      current_user.categories.expense
+      scoped_categories.expense
     else
-      current_user.categories.all
+      scoped_categories.all
     end
 
     render json: ActiveModelSerializers::SerializableResource.new(@categories).to_json
@@ -18,12 +22,15 @@ class CategoriesController < ProtectedResourceController
 
   # GET /categories/1
   def show
+    authorize @category
     render json: serialized_category
   end
 
   # POST /categories
   def create
-    @category = current_user.categories.new(category_params)
+    authorize Category
+
+    @category = policy_scope(Category).new(category_params)
 
     if @category.save
       render json: serialized_category, status: :created, location: @category
@@ -34,6 +41,8 @@ class CategoriesController < ProtectedResourceController
 
   # PATCH/PUT /categories/1
   def update
+    authorize @category
+
     if @category.update(category_params)
       render json: serialized_category
     else
@@ -43,6 +52,7 @@ class CategoriesController < ProtectedResourceController
 
   # DELETE /categories/1
   def destroy
+    authorize @category
     @category.destroy!
   end
 
@@ -54,7 +64,7 @@ class CategoriesController < ProtectedResourceController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_category
-    @category = Category.find(params[:id])
+    @category = policy_scope(Category).find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

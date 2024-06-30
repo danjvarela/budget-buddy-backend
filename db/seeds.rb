@@ -8,10 +8,7 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-unless Rails.env.production?
-  user = User.create!(email: "example@email.com", password: "123qwe123")
-  user.verified!
-
+def generate_records_for(user)
   ["Household", "Transportation", "Food", "Health", "Social Life", "Others"].each do |name|
     user.categories.create name: name, category_type: "expense"
   end
@@ -28,3 +25,12 @@ unless Rails.env.production?
   user.transactions.create transaction_type: "income", amount: 100, description: "Test Transaction", category: user.categories.income.first, financial_account: user.financial_accounts.first, date: DateTime.now
   user.transactions.create transaction_type: "transfer", amount: 100, description: "Test Transaction", from_financial_account: user.financial_accounts.first, to_financial_account: user.financial_accounts.second, date: DateTime.now
 end
+
+user = User.create!(email: "example@email.com", password: "123qwe123")
+user.verified!
+
+user2 = User.create!(email: "example01@email.com", password: "123qwe123")
+user2.verified!
+
+generate_records_for user
+generate_records_for user2

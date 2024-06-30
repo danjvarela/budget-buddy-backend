@@ -2,13 +2,17 @@ class ExpensesController < ProtectedResourceController
   before_action :set_expense, only: [:show, :update, :destroy]
 
   def index
-    @expenses = current_user.transactions.expense
+    authorize Transaction
+
+    @expenses = policy_scope(Transaction).expense
 
     render json: ActiveModelSerializers::SerializableResource.new(@expenses).serializable_hash
   end
 
   def create
-    @expense = current_user.transactions.new({**expense_params, transaction_type: "expense"})
+    authorize Transaction
+
+    @expense = policy_scope(Transaction).new({**expense_params, transaction_type: "expense"})
 
     if @expense.save
       render json: serialized_expense, status: :created
@@ -18,10 +22,12 @@ class ExpensesController < ProtectedResourceController
   end
 
   def show
+    authorize @expense
     render json: serialized_expense
   end
 
   def update
+    authorize @expense
     if @expense.update(expense_params)
       render json: serialized_expense
     else
@@ -30,6 +36,7 @@ class ExpensesController < ProtectedResourceController
   end
 
   def destroy
+    authorize @expense
     @expense.destroy!
   end
 
@@ -41,7 +48,7 @@ class ExpensesController < ProtectedResourceController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_expense
-    @expense = Transaction.find(params[:id])
+    @expense = policy_scope(Transaction).find(params[:id])
   end
 
   def expense_params

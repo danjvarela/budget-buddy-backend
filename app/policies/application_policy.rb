@@ -9,15 +9,15 @@ class ApplicationPolicy
   end
 
   def index?
-    false
+    true
   end
 
   def show?
-    false
+    user_owner_of_record?
   end
 
   def create?
-    false
+    true
   end
 
   def new?
@@ -25,7 +25,7 @@ class ApplicationPolicy
   end
 
   def update?
-    false
+    user_owner_of_record?
   end
 
   def edit?
@@ -33,7 +33,7 @@ class ApplicationPolicy
   end
 
   def destroy?
-    false
+    user_owner_of_record?
   end
 
   class Scope
@@ -43,11 +43,18 @@ class ApplicationPolicy
     end
 
     def resolve
-      raise NoMethodError, "You must define #resolve in #{self.class}"
+      # raise NoMethodError, "You must define #resolve in #{self.class}"
+      @scope.where(user_id: @user.id)
     end
 
     private
 
     attr_reader :user, :scope
+  end
+
+  private
+
+  def user_owner_of_record?
+    @record.user_id == @user.id
   end
 end

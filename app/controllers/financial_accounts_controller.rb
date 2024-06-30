@@ -3,19 +3,24 @@ class FinancialAccountsController < ProtectedResourceController
 
   # GET /financial_accounts
   def index
-    @financial_accounts = current_user.financial_accounts
+    authorize FinancialAccount
+
+    @financial_accounts = policy_scope(FinancialAccount).all
 
     render json: ActiveModelSerializers::SerializableResource.new(@financial_accounts).to_json
   end
 
   # GET /financial_accounts/1
   def show
+    authorize @financial_account
     render json: serialized_financial_account
   end
 
   # POST /financial_accounts
   def create
-    @financial_account = current_user.financial_accounts.new(financial_account_params)
+    authorize FinancialAccount
+
+    @financial_account = policy_scope(FinancialAccount).new(financial_account_params)
 
     if @financial_account.save
       render json: serialized_financial_account, status: :created
@@ -26,6 +31,8 @@ class FinancialAccountsController < ProtectedResourceController
 
   # PATCH/PUT /financial_accounts/1
   def update
+    authorize @financial_account
+
     if @financial_account.update(financial_account_params)
       render json: serialized_financial_account
     else
@@ -35,6 +42,7 @@ class FinancialAccountsController < ProtectedResourceController
 
   # DELETE /financial_accounts/1
   def destroy
+    authorize @financial_account
     @financial_account.destroy!
   end
 
@@ -46,7 +54,7 @@ class FinancialAccountsController < ProtectedResourceController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_financial_account
-    @financial_account = FinancialAccount.find(params[:id])
+    @financial_account = policy_scope(FinancialAccount).find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
