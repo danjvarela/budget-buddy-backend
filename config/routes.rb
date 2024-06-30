@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :transactions, only: [:index, :destroy]
   resources :expenses
+  resources :transfers
   resources :incomes
   resources :categories
   resources :financial_accounts

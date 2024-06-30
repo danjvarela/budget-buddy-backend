@@ -537,7 +537,7 @@ paths:
     post:
       summary: Creates a new income transaction
       tags:
-      - incomes
+      - Incomes
       parameters: []
       security:
       - bearer_auth: []
@@ -577,7 +577,7 @@ paths:
     get:
       summary: Gets all income transactions associated to the logged in user
       tags:
-      - incomes
+      - Incomes
       security:
       - bearer_auth: []
       responses:
@@ -593,7 +593,7 @@ paths:
     get:
       summary: Gets the details of an income transaction
       tags:
-      - incomes
+      - Incomes
       parameters:
       - name: id
         in: path
@@ -618,7 +618,7 @@ paths:
     put:
       summary: Updates an income transaction
       tags:
-      - incomes
+      - Incomes
       parameters:
       - name: id
         in: path
@@ -648,7 +648,7 @@ paths:
     delete:
       summary: deletes a income
       tags:
-      - incomes
+      - Incomes
       parameters:
       - name: id
         in: path
@@ -710,6 +710,139 @@ paths:
           description: transaction successfully deleted
         '404':
           description: transaction not found
+  "/transfers":
+    post:
+      summary: Creates a new transfer transaction
+      tags:
+      - Transfers
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '201':
+          description: transfer transaction created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/transfer_transaction"
+        '422':
+          description: failed to create transfer transaction
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      fromFinancialAccountId:
+                      - can't be blank
+              schema:
+                "$ref": "#/components/schemas/resource_creation_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/create_transfer_params"
+            examples:
+              example:
+                summary: Creates a new transfer transaction
+                value:
+                  fromFinancialAccountId: 1
+                  toFinancialAccountId: 2
+                  description: ATM Withdrawal
+                  amount: 190.0
+                  date: '2023-12-18T04:09:53.000Z'
+    get:
+      summary: Gets all transfer transactions associated to the logged in user
+      tags:
+      - Transfers
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: transfer transactions returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/transfer_transaction"
+  "/transfers/{id}":
+    get:
+      summary: Gets the details of a transfer transaction
+      tags:
+      - Transfers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: transfer transaction returned
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/transfer_transaction"
+        '404':
+          description: transfer not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+    put:
+      summary: Updates an transfer transaction
+      tags:
+      - Transfers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: transfer updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/transfer_transaction"
+        '404':
+          description: transfer not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/update_transfer_params"
+    delete:
+      summary: deletes a transfer
+      tags:
+      - Transfers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: transfer deleted
+        '404':
+          description: transfer not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/resource_not_found_error"
   "/change-login":
     post:
       summary: Requests change of account email. Sends confirmation email to the new
@@ -1080,6 +1213,42 @@ components:
     update_income_params:
       allOf:
       - "$ref": "#/components/schemas/update_expense_params"
+    create_transfer_params:
+      type: object
+      properties:
+        date:
+          type: string
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+          nullable: true
+        fromFinancialAccountId:
+          type: integer
+        toFinancialAccountId:
+          type: integer
+      required:
+      - fromFinancialAccountId
+      - toFinancialAccountId
+      - categoryId
+      - amount
+      - date
+    update_transfer_params:
+      type: object
+      properties:
+        date:
+          type: string
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+          nullable: true
+        fromFinancialAccountId:
+          type: integer
+        toFinancialAccountId:
+          type: integer
 servers:
 - url: "{url}"
   variables:

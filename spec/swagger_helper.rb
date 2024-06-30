@@ -198,6 +198,27 @@ RSpec.configure do |config|
           },
           update_income_params: {
             allOf: [{"$ref": "#/components/schemas/update_expense_params"}]
+          },
+          create_transfer_params: {
+            type: :object,
+            properties: {
+              date: {type: :string},
+              amount: {type: :number, format: :double},
+              description: {type: :string, nullable: true},
+              fromFinancialAccountId: {type: :integer},
+              toFinancialAccountId: {type: :integer}
+            },
+            required: ["fromFinancialAccountId", "toFinancialAccountId", "categoryId", "amount", "date"]
+          },
+          update_transfer_params: {
+            type: :object,
+            properties: {
+              date: {type: :string},
+              amount: {type: :number, format: :double},
+              description: {type: :string, nullable: true},
+              fromFinancialAccountId: {type: :integer},
+              toFinancialAccountId: {type: :integer}
+            }
           }
         }
       },

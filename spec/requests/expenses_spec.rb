@@ -31,7 +31,7 @@ RSpec.describe "Expenses", type: :request do
         run_test!
       end
 
-      response 422, "failed to create expense transaction" do
+      response 422, "expense transaction creation failed" do
         schema "$ref" => "#/components/schemas/resource_creation_error"
         example "application/json", :example, {errors: {category_id: ["can't be blank"]}}
         let(:expense) {
@@ -70,7 +70,7 @@ RSpec.describe "Expenses", type: :request do
         run_test!
       end
 
-      response 404, "expense not found" do
+      response 404, "expense transaction not found" do
         schema "$ref" => "#/components/schemas/resource_not_found_error"
         let(:id) { 1000000 }
         run_test!
@@ -85,7 +85,7 @@ RSpec.describe "Expenses", type: :request do
       parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/update_expense_params"}
       security [bearer_auth: []]
 
-      response 200, "expense updated" do
+      response 200, "expense transaction updated" do
         schema "$ref" => "#/components/schemas/expense_transaction"
         let(:expense) { create(:expense_transaction, user: logged_user) }
         let(:id) { expense.id }
@@ -93,7 +93,7 @@ RSpec.describe "Expenses", type: :request do
         run_test!
       end
 
-      response 404, "expense not found" do
+      response 404, "expense transaction not found" do
         schema "$ref" => "#/components/schemas/resource_not_found_error"
         let(:id) { 100000 }
         let(:new_attributes) { {amount: 100} }
@@ -108,12 +108,12 @@ RSpec.describe "Expenses", type: :request do
       parameter name: :id, in: :path, type: :integer
       security [bearer_auth: []]
 
-      response 204, "expense deleted" do
+      response 204, "expense transaction deleted" do
         let(:id) { create(:expense_transaction, user: logged_user).id }
         run_test!
       end
 
-      response 404, "expense not found" do
+      response 404, "expense transaction not found" do
         schema "$ref" => "#/components/schemas/resource_not_found_error"
         let(:id) { 100000 }
         run_test!
