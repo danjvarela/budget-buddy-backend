@@ -61,11 +61,9 @@ gem "omniauth-google-oauth2", "~> 1.1"
 
 gem "jwt", "~> 2.8"
 
-gem "rodauth-model", "~> 0.2.1"
-
 gem "active_model_serializers", "~> 0.10.0"
 
-gem "dockerfile-rails", ">= 1.6", :group => :development
+gem "dockerfile-rails", ">= 1.6", group: :development
 
 gem "mailtrap", "~> 2.0"
 
