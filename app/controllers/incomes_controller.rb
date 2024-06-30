@@ -17,7 +17,7 @@ class IncomesController < ProtectedResourceController
     if @income.save
       render json: serialized_income, status: :created
     else
-      render json: {errors: @income.errors}, status: :unprocessable_entity
+      render json: camelize_keys({errors: @income.errors.to_hash}), status: :unprocessable_entity
     end
   end
 
@@ -31,7 +31,7 @@ class IncomesController < ProtectedResourceController
     if @income.update(income_params)
       render json: serialized_income
     else
-      render json: @income.errors, status: :unprocessable_entity
+      render json: camelize_keys({errors: @income.errors.to_hash}), status: :unprocessable_entity
     end
   end
 

@@ -35,7 +35,7 @@ class CategoriesController < ProtectedResourceController
     if @category.save
       render json: serialized_category, status: :created, location: @category
     else
-      render json: {errors: @category.errors}, status: :unprocessable_entity
+      render json: camelize_keys({errors: @category.errors.to_hash}), status: :unprocessable_entity
     end
   end
 
@@ -46,7 +46,7 @@ class CategoriesController < ProtectedResourceController
     if @category.update(category_params)
       render json: serialized_category
     else
-      render json: {errors: @category.errors}, status: :unprocessable_entity
+      render json: camelize_keys({errors: @category.errors.to_hash}), status: :unprocessable_entity
     end
   end
 

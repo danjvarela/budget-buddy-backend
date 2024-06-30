@@ -17,7 +17,7 @@ class TransfersController < ProtectedResourceController
     if @transfer.save
       render json: serialized_transfer, status: :created
     else
-      render json: {errors: @transfer.errors}, status: :unprocessable_entity
+      render json: camelize_keys({errors: @transfer.errors.to_hash}), status: :unprocessable_entity
     end
   end
 
@@ -31,7 +31,7 @@ class TransfersController < ProtectedResourceController
     if @transfer.update(transfer_params)
       render json: serialized_transfer
     else
-      render json: @transfer.errors, status: :unprocessable_entity
+      render json: camelize_keys({errors: @transfer.errors.to_hash}), status: :unprocessable_entity
     end
   end
 

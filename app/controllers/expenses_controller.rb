@@ -17,7 +17,7 @@ class ExpensesController < ProtectedResourceController
     if @expense.save
       render json: serialized_expense, status: :created
     else
-      render json: {errors: @expense.errors}, status: :unprocessable_entity
+      render json: camelize_keys({errors: @expense.errors.to_hash}), status: :unprocessable_entity
     end
   end
 
@@ -31,7 +31,7 @@ class ExpensesController < ProtectedResourceController
     if @expense.update(expense_params)
       render json: serialized_expense
     else
-      render json: @expense.errors, status: :unprocessable_entity
+      render json: camelize_keys({errors: @expense.errors.to_hash}), status: :unprocessable_entity
     end
   end
 

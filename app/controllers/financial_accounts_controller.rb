@@ -25,7 +25,7 @@ class FinancialAccountsController < ProtectedResourceController
     if @financial_account.save
       render json: serialized_financial_account, status: :created
     else
-      render json: {errors: @financial_account.errors}, status: :unprocessable_entity
+      render json: camelize_keys({errors: @financial_account.errors.to_hash}), status: :unprocessable_entity
     end
   end
 
@@ -36,7 +36,7 @@ class FinancialAccountsController < ProtectedResourceController
     if @financial_account.update(financial_account_params)
       render json: serialized_financial_account
     else
-      render json: @financial_account.errors, status: :unprocessable_entity
+      render json: camelize_keys({errors: @financial_account.errors.to_hash}), status: :unprocessable_entity
     end
   end
 
