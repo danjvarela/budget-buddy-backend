@@ -79,6 +79,7 @@ RSpec.configure do |config|
             properties: {
               name: {type: :string},
               initialAmount: {type: :number, format: :double},
+              currentBalance: {type: :number, format: :double},
               description: {type: :string, nullable: true},
               id: {type: :integer}
             }
