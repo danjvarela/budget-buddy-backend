@@ -30,15 +30,15 @@ RSpec.configure do |config|
           }
         },
         schemas: {
-          transaction_type: {
+          TransactionType: {
             type: :string,
             enum: [:income, :expense, :transfer]
           },
-          category_type: {
+          CategoryType: {
             type: :string,
             enum: [:income, :expense, :transfer]
           },
-          resource_creation_error: {
+          ResourceCreationError: {
             type: :object,
             properties: {
               errors: {
@@ -51,13 +51,13 @@ RSpec.configure do |config|
             },
             required: ["errors"]
           },
-          resource_not_found_error: {
+          ResourceNotFoundError: {
             type: :object,
             properties: {
               error: {type: :string}
             }
           },
-          create_financial_account_params: {
+          CreateFinancialAccountParams: {
             type: :object,
             properties: {
               name: {type: :string},
@@ -66,7 +66,7 @@ RSpec.configure do |config|
             },
             required: ["name", "initialAmount"]
           },
-          update_financial_account_params: {
+          UpdateFinancialAccountParams: {
             type: :object,
             properties: {
               name: {type: :string},
@@ -74,7 +74,7 @@ RSpec.configure do |config|
               description: {type: :string}
             }
           },
-          financial_account: {
+          FinancialAccount: {
             type: :object,
             properties: {
               name: {type: :string},
@@ -84,96 +84,81 @@ RSpec.configure do |config|
               id: {type: :integer}
             }
           },
-          base_category: {
+          CreateCategoryParams: {
             type: :object,
             properties: {
-              categoryType: {"$ref": "#/components/schemas/category_type"},
-              name: {type: :string}
-            }
-          },
-          create_category_params: {
-            type: :object,
-            properties: {
-              categoryType: {"$ref": "#/components/schemas/category_type"},
+              categoryType: {"$ref": "#/components/schemas/CategoryType"},
               name: {type: :string}
             },
             required: ["name", "categoryType"]
           },
-          update_category_params: {
+          UpdateCategoryParams: {
             type: :object,
             properties: {
-              categoryType: {"$ref": "#/components/schemas/category_type"},
+              categoryType: {"$ref": "#/components/schemas/CategoryType"},
               name: {type: :string}
             }
           },
-          category: {
+          Category: {
             type: :object,
             properties: {
-              categoryType: {"$ref": "#/components/schemas/category_type"},
+              categoryType: {"$ref": "#/components/schemas/CategoryType"},
               name: {type: :string},
               id: {type: :integer}
             }
           },
-          base_transaction: {
-            type: :object,
-            properties: {
-              date: {type: :string},
-              amount: {type: :number, format: :double},
-              description: {type: :string, nullable: true}
-            }
-          },
-          expense_transaction: {
+          ExpenseTransaction: {
             type: :object,
             properties: {
               date: {type: :string},
               amount: {type: :number, format: :double},
               description: {type: :string, nullable: true},
               transactionType: {type: :string},
-              financialAccount: {"$ref": "#/components/schemas/financial_account"},
-              category: {"$ref": "#/components/schemas/category"},
+              financialAccount: {"$ref": "#/components/schemas/FinancialAccount"},
+              category: {"$ref": "#/components/schemas/Category"},
               id: {type: :integer}
             }
           },
-          income_transaction: {
+          IncomeTransaction: {
             type: :object,
             properties: {
               date: {type: :string},
               amount: {type: :number, format: :double},
               description: {type: :string, nullable: true},
               transactionType: {type: :string},
-              financialAccount: {"$ref": "#/components/schemas/financial_account"},
-              category: {"$ref": "#/components/schemas/category"},
+              financialAccount: {"$ref": "#/components/schemas/FinancialAccount"},
+              category: {"$ref": "#/components/schemas/Category"},
               id: {type: :integer}
             }
           },
-          transfer_transaction: {
+          TransferTransaction: {
             type: :object,
             properties: {
               date: {type: :string},
               amount: {type: :number, format: :double},
               description: {type: :string, nullable: true},
               transactionType: {type: :string},
-              fromFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
-              toFinancialAccount: {"$ref": "#/components/schemas/financial_account"},
+              fromFinancialAccount: {"$ref": "#/components/schemas/FinancialAccount"},
+              toFinancialAccount: {"$ref": "#/components/schemas/FinancialAccount"},
               id: {type: :integer}
             }
           },
-          transaction: {
+          Transaction: {
             oneOf: [
-              {"$ref": "#/components/schemas/expense_transaction"},
-              {"$ref": "#/components/schemas/income_transaction"},
-              {"$ref": "#/components/schemas/transfer_transaction"}
+              {"$ref": "#/components/schemas/ExpenseTransaction"},
+              {"$ref": "#/components/schemas/IncomeTransaction"},
+              {"$ref": "#/components/schemas/TransferTransaction"}
             ],
             discriminator: {
               propertyName: :transactionType,
               mapping: {
-                expense: "#/components/schemas/expense_transaction",
-                income: "#/components/schemas/income_transaction",
-                transfer: "#/components/schemas/transfer_transaction"
+                expense: "#/components/schemas/ExpenseTransaction",
+                income: "#/components/schemas/IncomeTransaction",
+                transfer: "#/components/schemas/TransferTransaction"
               }
             }
           },
-          create_expense_params: {
+          CreateExpenseParams: {
             type: :object,
             properties: {
               date: {type: :string},
@@ -184,7 +169,7 @@ RSpec.configure do |config|
             },
             required: ["financialAccountId", "categoryId", "amount", "date"]
           },
-          update_expense_params: {
+          UpdateExpenseParams: {
             type: :object,
             properties: {
               date: {type: :string},
@@ -194,13 +179,13 @@ RSpec.configure do |config|
               categoryId: {type: :integer}
             }
           },
-          create_income_params: {
-            allOf: [{"$ref": "#/components/schemas/create_expense_params"}]
+          CreateIncomeParams: {
+            allOf: [{"$ref": "#/components/schemas/CreateExpenseParams"}]
           },
-          update_income_params: {
-            allOf: [{"$ref": "#/components/schemas/update_expense_params"}]
+          UpdateIncomeParams: {
+            allOf: [{"$ref": "#/components/schemas/UpdateExpenseParams"}]
           },
-          create_transfer_params: {
+          CreateTransferParams: {
             type: :object,
             properties: {
               date: {type: :string},
@@ -211,7 +196,7 @@ RSpec.configure do |config|
             },
             required: ["fromFinancialAccountId", "toFinancialAccountId", "categoryId", "amount", "date"]
           },
-          update_transfer_params: {
+          UpdateTransferParams: {
             type: :object,
             properties: {
               date: {type: :string},

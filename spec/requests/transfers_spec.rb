@@ -9,7 +9,7 @@ RSpec.describe "Transfers", type: :request do
       tags "Transfers"
       consumes "application/json"
       produces "application/json"
-      parameter name: :transfer, in: :body, schema: {"$ref" => "#/components/schemas/create_transfer_params"}
+      parameter name: :transfer, in: :body, schema: {"$ref" => "#/components/schemas/CreateTransferParams"}
       security [bearer_auth: []]
       request_body_example value: {
         fromFinancialAccountId: 1,
@@ -20,7 +20,7 @@ RSpec.describe "Transfers", type: :request do
       }, name: :example
 
       response 201, "transfer transaction created" do
-        schema "$ref" => "#/components/schemas/transfer_transaction"
+        schema "$ref" => "#/components/schemas/TransferTransaction"
         let(:transfer) {
           from_financial_account = create :financial_account, user: logged_user
           to_financial_account = create :financial_account, user: logged_user
@@ -32,7 +32,7 @@ RSpec.describe "Transfers", type: :request do
       end
 
       response 422, "failed to create transfer transaction" do
-        schema "$ref" => "#/components/schemas/resource_creation_error"
+        schema "$ref" => "#/components/schemas/ResourceCreationError"
         example "application/json", :example, {errors: {fromFinancialAccountId: ["can't be blank"]}}
         let(:transfer) {
           a = attributes_for :transfer_transaction, user_id: logged_user.id, from_financial_account_id: nil, to_financial_account_id: nil
@@ -49,7 +49,7 @@ RSpec.describe "Transfers", type: :request do
       security [bearer_auth: []]
 
       response 200, "transfer transactions returned" do
-        schema type: :array, items: {"$ref" => "#/components/schemas/transfer_transaction"}
+        schema type: :array, items: {"$ref" => "#/components/schemas/TransferTransaction"}
         run_test!
       end
     end
@@ -64,13 +64,13 @@ RSpec.describe "Transfers", type: :request do
       security [bearer_auth: []]
 
       response 200, "transfer transaction returned" do
-        schema "$ref" => "#/components/schemas/transfer_transaction"
+        schema "$ref" => "#/components/schemas/TransferTransaction"
         let(:id) { create(:transfer_transaction, user: logged_user).id }
         run_test!
       end
 
       response 404, "transfer not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 1000000 }
         run_test!
       end
@@ -81,11 +81,11 @@ RSpec.describe "Transfers", type: :request do
       consumes "application/json"
       produces "application/json"
       parameter name: :id, in: :path, type: :integer
-      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/update_transfer_params"}
+      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/UpdateTransferParams"}
       security [bearer_auth: []]
 
       response 200, "transfer updated" do
-        schema "$ref" => "#/components/schemas/transfer_transaction"
+        schema "$ref" => "#/components/schemas/TransferTransaction"
         let(:transfer) { create(:transfer_transaction, user: logged_user) }
         let(:id) { transfer.id }
         let(:new_attributes) { {amount: transfer.amount + 1} }
@@ -93,7 +93,7 @@ RSpec.describe "Transfers", type: :request do
       end
 
       response 404, "transfer not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 100000 }
         let(:new_attributes) { {amount: 100} }
         run_test!
@@ -113,7 +113,7 @@ RSpec.describe "Transfers", type: :request do
       end
 
       response 404, "transfer not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 100000 }
         run_test!
       end

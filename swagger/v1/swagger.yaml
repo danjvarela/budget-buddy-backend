@@ -145,7 +145,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/category"
+                "$ref": "#/components/schemas/Category"
         '422':
           description: failed to create category
           content:
@@ -157,12 +157,12 @@ paths:
                       name:
                       - can't be blank
               schema:
-                "$ref": "#/components/schemas/resource_creation_error"
+                "$ref": "#/components/schemas/ResourceCreationError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/create_category_params"
+              "$ref": "#/components/schemas/CreateCategoryParams"
             examples:
               example:
                 summary: Creates a new category
@@ -191,7 +191,7 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/category"
+                  "$ref": "#/components/schemas/Category"
   "/categories/{id}":
     get:
       summary: Gets the details of a category
@@ -211,13 +211,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/category"
+                "$ref": "#/components/schemas/Category"
         '404':
           description: category not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
     put:
       summary: Updates a category
       tags:
@@ -236,18 +236,18 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/category"
+                "$ref": "#/components/schemas/Category"
         '404':
           description: category not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/update_category_params"
+              "$ref": "#/components/schemas/UpdateCategoryParams"
     delete:
       summary: deletes a category
       tags:
@@ -268,7 +268,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
   "/expenses":
     post:
       summary: Creates a new expense transaction
@@ -283,9 +283,9 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/expense_transaction"
+                "$ref": "#/components/schemas/ExpenseTransaction"
         '422':
-          description: failed to create expense transaction
+          description: expense transaction creation failed
           content:
             application/json:
               examples:
@@ -295,12 +295,12 @@ paths:
                       category_id:
                       - can't be blank
               schema:
-                "$ref": "#/components/schemas/resource_creation_error"
+                "$ref": "#/components/schemas/ResourceCreationError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/create_expense_params"
+              "$ref": "#/components/schemas/CreateExpenseParams"
             examples:
               example:
                 summary: Creates a new expense transaction
@@ -324,7 +324,7 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/expense_transaction"
+                  "$ref": "#/components/schemas/ExpenseTransaction"
   "/expenses/{id}":
     get:
       summary: Gets the details of an expense transaction
@@ -344,13 +344,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/expense_transaction"
+                "$ref": "#/components/schemas/ExpenseTransaction"
         '404':
-          description: expense not found
+          description: expense transaction not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
     put:
       summary: Updates an expense transaction
       tags:
@@ -365,22 +365,22 @@ paths:
       - bearer_auth: []
       responses:
         '200':
-          description: expense updated
+          description: expense transaction updated
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/expense_transaction"
+                "$ref": "#/components/schemas/ExpenseTransaction"
         '404':
-          description: expense not found
+          description: expense transaction not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/update_expense_params"
+              "$ref": "#/components/schemas/UpdateExpenseParams"
     delete:
       summary: deletes a expense
       tags:
@@ -395,13 +395,13 @@ paths:
       - bearer_auth: []
       responses:
         '204':
-          description: expense deleted
+          description: expense transaction deleted
         '404':
-          description: expense not found
+          description: expense transaction not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
   "/financial_accounts":
     post:
       summary: Creates a new financial account
@@ -416,7 +416,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/financial_account"
+                "$ref": "#/components/schemas/FinancialAccount"
         '422':
           description: failed to create financial account
           content:
@@ -428,12 +428,12 @@ paths:
                       name:
                       - can't be blank
               schema:
-                "$ref": "#/components/schemas/resource_creation_error"
+                "$ref": "#/components/schemas/ResourceCreationError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/create_financial_account_params"
+              "$ref": "#/components/schemas/CreateFinancialAccountParams"
             examples:
               example:
                 summary: Creates a new financial account
@@ -455,7 +455,7 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/financial_account"
+                  "$ref": "#/components/schemas/FinancialAccount"
   "/financial_accounts/{id}":
     get:
       summary: Gets the details of a financial account
@@ -475,13 +475,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/financial_account"
+                "$ref": "#/components/schemas/FinancialAccount"
         '404':
           description: financial account not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
     put:
       summary: Updates a financial account
       tags:
@@ -500,18 +500,18 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/financial_account"
+                "$ref": "#/components/schemas/FinancialAccount"
         '404':
           description: financial account not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/update_financial_account_params"
+              "$ref": "#/components/schemas/UpdateFinancialAccountParams"
     delete:
       summary: deletes a financial account
       tags:
@@ -532,7 +532,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
   "/incomes":
     post:
       summary: Creates a new income transaction
@@ -547,9 +547,9 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/income_transaction"
+                "$ref": "#/components/schemas/IncomeTransaction"
         '422':
-          description: failed to create income transaction
+          description: income transaction creation failed
           content:
             application/json:
               examples:
@@ -559,12 +559,12 @@ paths:
                       category_id:
                       - can't be blank
               schema:
-                "$ref": "#/components/schemas/resource_creation_error"
+                "$ref": "#/components/schemas/ResourceCreationError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/create_income_params"
+              "$ref": "#/components/schemas/CreateIncomeParams"
             examples:
               example:
                 summary: Creates a new income transaction
@@ -588,7 +588,7 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/income_transaction"
+                  "$ref": "#/components/schemas/IncomeTransaction"
   "/incomes/{id}":
     get:
       summary: Gets the details of an income transaction
@@ -608,13 +608,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/income_transaction"
+                "$ref": "#/components/schemas/IncomeTransaction"
         '404':
-          description: income not found
+          description: income transaction not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
     put:
       summary: Updates an income transaction
       tags:
@@ -629,22 +629,22 @@ paths:
       - bearer_auth: []
       responses:
         '200':
-          description: income updated
+          description: income transaction updated
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/income_transaction"
+                "$ref": "#/components/schemas/IncomeTransaction"
         '404':
-          description: income not found
+          description: income transaction not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/update_income_params"
+              "$ref": "#/components/schemas/UpdateIncomeParams"
     delete:
       summary: deletes a income
       tags:
@@ -659,13 +659,13 @@ paths:
       - bearer_auth: []
       responses:
         '204':
-          description: income deleted
+          description: income transaction deleted
         '404':
-          description: income not found
+          description: income transaction not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
   "/current-account":
     get:
       summary: Retrieves the currently logged account
@@ -691,7 +691,7 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/transaction"
+                  "$ref": "#/components/schemas/Transaction"
   "/transactions/{id}":
     delete:
       summary: Deletes an income, expense, or transfer transaction
@@ -724,7 +724,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/transfer_transaction"
+                "$ref": "#/components/schemas/TransferTransaction"
         '422':
           description: failed to create transfer transaction
           content:
@@ -736,12 +736,12 @@ paths:
                       fromFinancialAccountId:
                       - can't be blank
               schema:
-                "$ref": "#/components/schemas/resource_creation_error"
+                "$ref": "#/components/schemas/ResourceCreationError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/create_transfer_params"
+              "$ref": "#/components/schemas/CreateTransferParams"
             examples:
               example:
                 summary: Creates a new transfer transaction
@@ -765,7 +765,7 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/transfer_transaction"
+                  "$ref": "#/components/schemas/TransferTransaction"
   "/transfers/{id}":
     get:
       summary: Gets the details of a transfer transaction
@@ -785,13 +785,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/transfer_transaction"
+                "$ref": "#/components/schemas/TransferTransaction"
         '404':
           description: transfer not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
     put:
       summary: Updates an transfer transaction
       tags:
@@ -810,18 +810,18 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/transfer_transaction"
+                "$ref": "#/components/schemas/TransferTransaction"
         '404':
           description: transfer not found
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/update_transfer_params"
+              "$ref": "#/components/schemas/UpdateTransferParams"
     delete:
       summary: deletes a transfer
       tags:
@@ -842,7 +842,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/resource_not_found_error"
+                "$ref": "#/components/schemas/ResourceNotFoundError"
   "/change-login":
     post:
       summary: Requests change of account email. Sends confirmation email to the new
@@ -995,19 +995,19 @@ components:
       type: http
       scheme: bearer
   schemas:
-    transaction_type:
+    TransactionType:
       type: string
       enum:
       - income
       - expense
       - transfer
-    category_type:
+    CategoryType:
       type: string
       enum:
       - income
       - expense
       - transfer
-    resource_creation_error:
+    ResourceCreationError:
       type: object
       properties:
         errors:
@@ -1018,12 +1018,12 @@ components:
               type: string
       required:
       - errors
-    resource_not_found_error:
+    ResourceNotFoundError:
       type: object
       properties:
         error:
           type: string
-    create_financial_account_params:
+    CreateFinancialAccountParams:
       type: object
       properties:
         name:
@@ -1037,7 +1037,7 @@ components:
       required:
       - name
       - initialAmount
-    update_financial_account_params:
+    UpdateFinancialAccountParams:
       type: object
       properties:
         name:
@@ -1047,12 +1047,15 @@ components:
           format: double
         description:
           type: string
-    financial_account:
+    FinancialAccount:
       type: object
       properties:
         name:
           type: string
         initialAmount:
+          type: number
+          format: double
+        currentBalance:
           type: number
           format: double
         description:
@@ -1060,51 +1063,33 @@ components:
           nullable: true
         id:
           type: integer
-    base_category:
+    CreateCategoryParams:
       type: object
       properties:
         categoryType:
-          "$ref": "#/components/schemas/category_type"
-        name:
-          type: string
-    create_category_params:
-      type: object
-      properties:
-        categoryType:
-          "$ref": "#/components/schemas/category_type"
+          "$ref": "#/components/schemas/CategoryType"
         name:
           type: string
       required:
       - name
       - categoryType
-    update_category_params:
+    UpdateCategoryParams:
       type: object
       properties:
         categoryType:
-          "$ref": "#/components/schemas/category_type"
+          "$ref": "#/components/schemas/CategoryType"
         name:
           type: string
-    category:
+    Category:
       type: object
       properties:
         categoryType:
-          "$ref": "#/components/schemas/category_type"
+          "$ref": "#/components/schemas/CategoryType"
         name:
           type: string
         id:
           type: integer
-    base_transaction:
-      type: object
-      properties:
-        date:
-          type: string
-        amount:
-          type: number
-          format: double
-        description:
-          type: string
-          nullable: true
-    expense_transaction:
+    ExpenseTransaction:
       type: object
       properties:
         date:
@@ -1118,12 +1103,12 @@ components:
         transactionType:
           type: string
         financialAccount:
-          "$ref": "#/components/schemas/financial_account"
+          "$ref": "#/components/schemas/FinancialAccount"
         category:
-          "$ref": "#/components/schemas/category"
+          "$ref": "#/components/schemas/Category"
         id:
           type: integer
-    income_transaction:
+    IncomeTransaction:
       type: object
       properties:
         date:
@@ -1137,12 +1122,12 @@ components:
         transactionType:
           type: string
         financialAccount:
-          "$ref": "#/components/schemas/financial_account"
+          "$ref": "#/components/schemas/FinancialAccount"
         category:
-          "$ref": "#/components/schemas/category"
+          "$ref": "#/components/schemas/Category"
         id:
           type: integer
-    transfer_transaction:
+    TransferTransaction:
       type: object
       properties:
         date:
@@ -1156,23 +1141,23 @@ components:
         transactionType:
           type: string
         fromFinancialAccount:
-          "$ref": "#/components/schemas/financial_account"
+          "$ref": "#/components/schemas/FinancialAccount"
         toFinancialAccount:
-          "$ref": "#/components/schemas/financial_account"
+          "$ref": "#/components/schemas/FinancialAccount"
         id:
           type: integer
-    transaction:
+    Transaction:
       oneOf:
-      - "$ref": "#/components/schemas/expense_transaction"
-      - "$ref": "#/components/schemas/income_transaction"
-      - "$ref": "#/components/schemas/transfer_transaction"
+      - "$ref": "#/components/schemas/ExpenseTransaction"
+      - "$ref": "#/components/schemas/IncomeTransaction"
+      - "$ref": "#/components/schemas/TransferTransaction"
       discriminator:
         propertyName: transactionType
         mapping:
-          expense: "#/components/schemas/expense_transaction"
-          income: "#/components/schemas/income_transaction"
-          transfer: "#/components/schemas/transfer_transaction"
-    create_expense_params:
+          expense: "#/components/schemas/ExpenseTransaction"
+          income: "#/components/schemas/IncomeTransaction"
+          transfer: "#/components/schemas/TransferTransaction"
+    CreateExpenseParams:
       type: object
       properties:
         date:
@@ -1192,7 +1177,7 @@ components:
       - categoryId
       - amount
       - date
-    update_expense_params:
+    UpdateExpenseParams:
       type: object
       properties:
         date:
@@ -1207,13 +1192,13 @@ components:
           type: integer
         categoryId:
           type: integer
-    create_income_params:
+    CreateIncomeParams:
       allOf:
-      - "$ref": "#/components/schemas/create_expense_params"
-    update_income_params:
+      - "$ref": "#/components/schemas/CreateExpenseParams"
+    UpdateIncomeParams:
       allOf:
-      - "$ref": "#/components/schemas/update_expense_params"
-    create_transfer_params:
+      - "$ref": "#/components/schemas/UpdateExpenseParams"
+    CreateTransferParams:
       type: object
       properties:
         date:
@@ -1234,7 +1219,7 @@ components:
       - categoryId
       - amount
       - date
-    update_transfer_params:
+    UpdateTransferParams:
       type: object
       properties:
         date:

@@ -12,7 +12,7 @@ RSpec.describe "Transactions", type: :request do
       security [bearer_auth: []]
 
       response 200, "success" do
-        schema type: :array, items: {"$ref": "#/components/schemas/transaction"}
+        schema type: :array, items: {"$ref": "#/components/schemas/Transaction"}
         run_test!
       end
     end

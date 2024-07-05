@@ -9,18 +9,18 @@ RSpec.describe "Categories", type: :request do
       tags "Categories"
       consumes "application/json"
       produces "application/json"
-      parameter name: :category, in: :body, schema: {"$ref" => "#/components/schemas/create_category_params"}
+      parameter name: :category, in: :body, schema: {"$ref" => "#/components/schemas/CreateCategoryParams"}
       security [bearer_auth: []]
       request_body_example value: {name: "Transportation", categoryType: "expense"}, name: :example
 
       response 201, "category created" do
-        schema "$ref" => "#/components/schemas/category"
+        schema "$ref" => "#/components/schemas/Category"
         let(:category) { camelize_keys(attributes_for(:category)) }
         run_test!
       end
 
       response 422, "failed to create category" do
-        schema "$ref" => "#/components/schemas/resource_creation_error"
+        schema "$ref" => "#/components/schemas/ResourceCreationError"
         example "application/json", :example, {errors: {name: ["can't be blank"]}}
         let(:category) { camelize_keys({**attributes_for(:category), name: nil}) }
         run_test!
@@ -35,7 +35,7 @@ RSpec.describe "Categories", type: :request do
       parameter name: :category_type, in: :query, type: :string, description: "This is type of category to query. It can be `income` or `expense`. The request will return all the categories for the logged in user if this is not specified or its value is null."
 
       response 200, "categories returned" do
-        schema type: :array, items: {"$ref" => "#/components/schemas/category"}
+        schema type: :array, items: {"$ref" => "#/components/schemas/Category"}
         let(:category_type) { "income" }
         run_test!
       end
@@ -51,13 +51,13 @@ RSpec.describe "Categories", type: :request do
       security [bearer_auth: []]
 
       response 200, "category returned" do
-        schema "$ref" => "#/components/schemas/category"
+        schema "$ref" => "#/components/schemas/Category"
         let(:id) { create(:category, user: logged_user).id }
         run_test!
       end
 
       response 404, "category not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 1000000 }
         run_test!
       end
@@ -68,11 +68,11 @@ RSpec.describe "Categories", type: :request do
       consumes "application/json"
       produces "application/json"
       parameter name: :id, in: :path, type: :integer
-      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/update_category_params"}
+      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/UpdateCategoryParams"}
       security [bearer_auth: []]
 
       response 200, "category updated" do
-        schema "$ref" => "#/components/schemas/category"
+        schema "$ref" => "#/components/schemas/Category"
         let(:category) { create :category, user: logged_user }
         let(:id) { category.id }
         let(:new_attributes) { {name: generate(:category_name)} }
@@ -80,7 +80,7 @@ RSpec.describe "Categories", type: :request do
       end
 
       response 404, "category not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 100000 }
         let(:new_attributes) { {name: generate(:category_name)} }
         run_test!
@@ -100,7 +100,7 @@ RSpec.describe "Categories", type: :request do
       end
 
       response 404, "category not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 100000 }
         run_test!
       end

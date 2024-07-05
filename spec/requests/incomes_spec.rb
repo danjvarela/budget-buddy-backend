@@ -9,7 +9,7 @@ RSpec.describe "Incomes", type: :request do
       tags "Incomes"
       consumes "application/json"
       produces "application/json"
-      parameter name: :income, in: :body, schema: {"$ref" => "#/components/schemas/create_income_params"}
+      parameter name: :income, in: :body, schema: {"$ref" => "#/components/schemas/CreateIncomeParams"}
       security [bearer_auth: []]
       request_body_example value: {
         financialAccountId: 1,
@@ -20,7 +20,7 @@ RSpec.describe "Incomes", type: :request do
       }, name: :example
 
       response 201, "income transaction created" do
-        schema "$ref" => "#/components/schemas/income_transaction"
+        schema "$ref" => "#/components/schemas/IncomeTransaction"
         let(:income) {
           financial_account = create :financial_account, user: logged_user
           category = create :category, user: logged_user, category_type: "income"
@@ -32,7 +32,7 @@ RSpec.describe "Incomes", type: :request do
       end
 
       response 422, "income transaction creation failed" do
-        schema "$ref" => "#/components/schemas/resource_creation_error"
+        schema "$ref" => "#/components/schemas/ResourceCreationError"
         example "application/json", :example, {errors: {category_id: ["can't be blank"]}}
         let(:income) {
           financial_account = create :financial_account, user: logged_user
@@ -50,7 +50,7 @@ RSpec.describe "Incomes", type: :request do
       security [bearer_auth: []]
 
       response 200, "income transactions returned" do
-        schema type: :array, items: {"$ref" => "#/components/schemas/income_transaction"}
+        schema type: :array, items: {"$ref" => "#/components/schemas/IncomeTransaction"}
         run_test!
       end
     end
@@ -65,13 +65,13 @@ RSpec.describe "Incomes", type: :request do
       security [bearer_auth: []]
 
       response 200, "income transaction returned" do
-        schema "$ref" => "#/components/schemas/income_transaction"
+        schema "$ref" => "#/components/schemas/IncomeTransaction"
         let(:id) { create(:income_transaction, user: logged_user).id }
         run_test!
       end
 
       response 404, "income transaction not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 1000000 }
         run_test!
       end
@@ -82,11 +82,11 @@ RSpec.describe "Incomes", type: :request do
       consumes "application/json"
       produces "application/json"
       parameter name: :id, in: :path, type: :integer
-      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/update_income_params"}
+      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/UpdateIncomeParams"}
       security [bearer_auth: []]
 
       response 200, "income transaction updated" do
-        schema "$ref" => "#/components/schemas/income_transaction"
+        schema "$ref" => "#/components/schemas/IncomeTransaction"
         let(:income) { create(:income_transaction, user: logged_user) }
         let(:id) { income.id }
         let(:new_attributes) { {amount: income.amount + 1} }
@@ -94,7 +94,7 @@ RSpec.describe "Incomes", type: :request do
       end
 
       response 404, "income transaction not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 100000 }
         let(:new_attributes) { {amount: 100} }
         run_test!
@@ -114,7 +114,7 @@ RSpec.describe "Incomes", type: :request do
       end
 
       response 404, "income transaction not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 100000 }
         run_test!
       end

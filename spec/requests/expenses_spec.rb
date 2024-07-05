@@ -9,7 +9,7 @@ RSpec.describe "Expenses", type: :request do
       tags "Expenses"
       consumes "application/json"
       produces "application/json"
-      parameter name: :expense, in: :body, schema: {"$ref" => "#/components/schemas/create_expense_params"}
+      parameter name: :expense, in: :body, schema: {"$ref" => "#/components/schemas/CreateExpenseParams"}
       security [bearer_auth: []]
       request_body_example value: {
         financialAccountId: 1,
@@ -20,7 +20,7 @@ RSpec.describe "Expenses", type: :request do
       }, name: :example
 
       response 201, "expense transaction created" do
-        schema "$ref" => "#/components/schemas/expense_transaction"
+        schema "$ref" => "#/components/schemas/ExpenseTransaction"
         let(:expense) {
           financial_account = create :financial_account, user: logged_user
           category = create :category, user: logged_user
@@ -32,7 +32,7 @@ RSpec.describe "Expenses", type: :request do
       end
 
       response 422, "expense transaction creation failed" do
-        schema "$ref" => "#/components/schemas/resource_creation_error"
+        schema "$ref" => "#/components/schemas/ResourceCreationError"
         example "application/json", :example, {errors: {category_id: ["can't be blank"]}}
         let(:expense) {
           financial_account = create :financial_account, user: logged_user
@@ -50,7 +50,7 @@ RSpec.describe "Expenses", type: :request do
       security [bearer_auth: []]
 
       response 200, "expense transactions returned" do
-        schema type: :array, items: {"$ref" => "#/components/schemas/expense_transaction"}
+        schema type: :array, items: {"$ref" => "#/components/schemas/ExpenseTransaction"}
         run_test!
       end
     end
@@ -65,13 +65,13 @@ RSpec.describe "Expenses", type: :request do
       security [bearer_auth: []]
 
       response 200, "expense transaction returned" do
-        schema "$ref" => "#/components/schemas/expense_transaction"
+        schema "$ref" => "#/components/schemas/ExpenseTransaction"
         let(:id) { create(:expense_transaction, user: logged_user).id }
         run_test!
       end
 
       response 404, "expense transaction not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 1000000 }
         run_test!
       end
@@ -82,11 +82,11 @@ RSpec.describe "Expenses", type: :request do
       consumes "application/json"
       produces "application/json"
       parameter name: :id, in: :path, type: :integer
-      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/update_expense_params"}
+      parameter name: :new_attributes, in: :body, schema: {"$ref" => "#/components/schemas/UpdateExpenseParams"}
       security [bearer_auth: []]
 
       response 200, "expense transaction updated" do
-        schema "$ref" => "#/components/schemas/expense_transaction"
+        schema "$ref" => "#/components/schemas/ExpenseTransaction"
         let(:expense) { create(:expense_transaction, user: logged_user) }
         let(:id) { expense.id }
         let(:new_attributes) { {amount: expense.amount + 1} }
@@ -94,7 +94,7 @@ RSpec.describe "Expenses", type: :request do
       end
 
       response 404, "expense transaction not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 100000 }
         let(:new_attributes) { {amount: 100} }
         run_test!
@@ -114,7 +114,7 @@ RSpec.describe "Expenses", type: :request do
       end
 
       response 404, "expense transaction not found" do
-        schema "$ref" => "#/components/schemas/resource_not_found_error"
+        schema "$ref" => "#/components/schemas/ResourceNotFoundError"
         let(:id) { 100000 }
         run_test!
       end
