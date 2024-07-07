@@ -3,7 +3,7 @@ require "sequel/core"
 class RodauthMain < Rodauth::Rails::Auth
   configure do
     # List of authentication features that are loaded.
-    enable :create_account, :verify_account, :verify_account_grace_period,
+    enable :create_account, :verify_account,
       :login, :logout, :reset_password, :change_password, :change_password_notify, :internal_request,
       :change_login, :verify_login_change, :close_account, :omniauth, :active_sessions, :jwt
 
