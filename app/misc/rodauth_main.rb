@@ -116,6 +116,9 @@ class RodauthMain < Rodauth::Rails::Auth
     verify_account_email_link do
       "#{Rails.application.credentials.frontend[:url]}/auth/verify-account?key=#{token_param_value(verify_account_key_value)}"
     end
+    verify_login_change_email_link do
+      "#{Rails.application.credentials.frontend[:url]}/auth/verify-email-change?key=#{token_param_value(verify_login_change_key_value)}"
+    end
     create_verify_login_change_email do |_login|
       RodauthMailer.verify_login_change(self.class.configuration_name, account_id, verify_login_change_key_value)
     end
