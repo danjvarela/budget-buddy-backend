@@ -90,7 +90,10 @@ class RodauthMain < Rodauth::Rails::Auth
     # Change some default param keys.
     login_param "email"
     login_confirm_param "email-confirm"
+
     # password_confirm_param "confirm_password"
+
+    no_matching_login_message "account with this email does not exist"
 
     # Redirect back to originally requested location after authentication.
     # login_return_to_requested_location? true
