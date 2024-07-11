@@ -94,6 +94,7 @@ class RodauthMain < Rodauth::Rails::Auth
     # password_confirm_param "confirm_password"
 
     no_matching_login_message "account with this email does not exist"
+    verify_login_change_error_flash "Unable to verify change of email"
 
     # Redirect back to originally requested location after authentication.
     # login_return_to_requested_location? true
