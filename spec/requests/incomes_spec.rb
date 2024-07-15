@@ -50,6 +50,7 @@ RSpec.describe "Incomes", type: :request do
       security [bearer_auth: []]
       parameter name: :fromDate, in: :query, type: :string, description: "Format: YYYY-MM-DD"
       parameter name: :toDate, in: :query, type: :string, description: "Format: YYYY-MM-DD"
+      parameter name: :descriptionContains, in: :query, type: :string
 
       response 200, "income transactions returned" do
         schema type: :array, items: {"$ref" => "#/components/schemas/IncomeTransaction"}
@@ -69,6 +70,7 @@ RSpec.describe "Incomes", type: :request do
         let(:toDate) {
           logged_user.transactions.income.last.date
         }
+        let(:descriptionContains) { "" }
         run_test!
       end
     end

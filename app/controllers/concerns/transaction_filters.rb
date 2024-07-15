@@ -2,7 +2,7 @@ module TransactionFilters
   extend ActiveSupport::Concern
 
   def filter_transactions(transactions)
-    opts = params.permit(:from_date, :to_date)
+    opts = params.permit(:from_date, :to_date, :description_contains)
 
     begin
       from_date = DateTime.parse(opts[:from_date]).midnight
@@ -14,7 +14,8 @@ module TransactionFilters
 
     transactions.ransack(
       "date_gteq" => from_date,
-      "date_lteq" => to_date
+      "date_lteq" => to_date,
+      "description_i_cont" => opts[:description_contains]
     ).result(distinct: true)
   end
 end
