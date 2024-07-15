@@ -70,3 +70,5 @@ gem "mailtrap", "~> 2.0"
 gem "pundit", "~> 2.3"
 
 gem "ransack", "~> 4.2"
+
+gem "will_paginate", "~> 4.0"
