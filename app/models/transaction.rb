@@ -15,6 +15,14 @@ class Transaction < ApplicationRecord
   validates :date, presence: true
   validate :ensure_consistent_type
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["amount", "category_id", "date", "description", "transaction_type"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["category", "financial_account", "from_financial_account", "to_financial_account", "user"]
+  end
+
   private
 
   def set_nil_attributes

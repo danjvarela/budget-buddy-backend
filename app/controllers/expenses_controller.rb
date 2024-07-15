@@ -1,10 +1,14 @@
 class ExpensesController < ProtectedResourceController
+  include TransactionFilters
+
   before_action :set_expense, only: [:show, :update, :destroy]
 
   def index
     authorize Transaction
 
     @expenses = policy_scope(Transaction).expense
+
+    @expenses = filter_transactions @expenses
 
     render json: ActiveModelSerializers::SerializableResource.new(@expenses).serializable_hash
   end

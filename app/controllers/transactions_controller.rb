@@ -1,4 +1,5 @@
 class TransactionsController < ProtectedResourceController
+  include TransactionFilters
   before_action :set_transaction, only: [:destroy]
 
   # GET /transactions
@@ -6,6 +7,8 @@ class TransactionsController < ProtectedResourceController
     authorize Transaction
 
     @transactions = policy_scope(Transaction).all
+
+    @transactions = filter_transactions @transactions
 
     render json: ActiveModelSerializers::SerializableResource.new(@transactions).serializable_hash
   end

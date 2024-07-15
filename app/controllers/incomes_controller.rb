@@ -1,10 +1,12 @@
 class IncomesController < ProtectedResourceController
+  include TransactionFilters
   before_action :set_income, only: [:show, :update, :destroy]
 
   def index
     authorize Transaction
 
     @incomes = policy_scope(Transaction).income
+    @incomes = filter_transactions @incomes
 
     render json: ActiveModelSerializers::SerializableResource.new(@incomes).serializable_hash
   end

@@ -68,3 +68,5 @@ gem "dockerfile-rails", ">= 1.6", group: :development
 gem "mailtrap", "~> 2.0"
 
 gem "pundit", "~> 2.3"
+
+gem "ransack", "~> 4.2"

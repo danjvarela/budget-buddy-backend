@@ -316,6 +316,17 @@ paths:
       - Expenses
       security:
       - bearer_auth: []
+      parameters:
+      - name: fromDate
+        in: query
+        description: 'Format: YYYY-MM-DD'
+        schema:
+          type: string
+      - name: toDate
+        in: query
+        description: 'Format: YYYY-MM-DD'
+        schema:
+          type: string
       responses:
         '200':
           description: expense transactions returned
@@ -571,7 +582,7 @@ paths:
                 value:
                   financialAccountId: 1
                   categoryId: 1
-                  description: Salar
+                  description: Salary
                   amount: 190.0
                   date: '2023-12-18T04:09:53.000Z'
     get:
@@ -580,6 +591,17 @@ paths:
       - Incomes
       security:
       - bearer_auth: []
+      parameters:
+      - name: fromDate
+        in: query
+        description: 'Format: YYYY-MM-DD'
+        schema:
+          type: string
+      - name: toDate
+        in: query
+        description: 'Format: YYYY-MM-DD'
+        schema:
+          type: string
       responses:
         '200':
           description: income transactions returned
@@ -683,6 +705,17 @@ paths:
       - Transactions
       security:
       - bearer_auth: []
+      parameters:
+      - name: fromDate
+        in: query
+        description: 'Format: YYYY-MM-DD'
+        schema:
+          type: string
+      - name: toDate
+        in: query
+        description: 'Format: YYYY-MM-DD'
+        schema:
+          type: string
       responses:
         '200':
           description: success
