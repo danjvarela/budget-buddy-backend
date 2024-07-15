@@ -36,7 +36,7 @@ RSpec.configure do |config|
           },
           CategoryType: {
             type: :string,
-            enum: [:income, :expense, :transfer]
+            enum: [:income, :expense]
           },
           ResourceCreationError: {
             type: :object,

@@ -1006,7 +1006,6 @@ components:
       enum:
       - income
       - expense
-      - transfer
     ResourceCreationError:
       type: object
       properties:
