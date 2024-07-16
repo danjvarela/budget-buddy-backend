@@ -53,6 +53,7 @@ RSpec.describe "Expenses", type: :request do
       parameter name: :descriptionContains, in: :query, type: :string
       parameter name: :page, in: :query, type: :string, description: "The page number"
       parameter name: :perPage, in: :query, type: :string, description: "The number of results per page"
+      parameter name: :sort, in: :query, type: :string, description: "Example: `date asc`, `description desc`"
 
       response 200, "expense transactions returned" do
         schema type: :array, items: {"$ref" => "#/components/schemas/ExpenseTransaction"}
@@ -75,6 +76,7 @@ RSpec.describe "Expenses", type: :request do
         let(:descriptionContains) { "" }
         let(:page) { 1 }
         let(:perPage) { 2 }
+        let(:sort) { nil }
         run_test!
       end
     end

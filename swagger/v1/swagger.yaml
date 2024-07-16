@@ -341,6 +341,11 @@ paths:
         description: The number of results per page
         schema:
           type: string
+      - name: sort
+        in: query
+        description: 'Example: `date asc`, `description desc`'
+        schema:
+          type: string
       responses:
         '200':
           description: expense transactions returned
@@ -630,6 +635,11 @@ paths:
         description: The number of results per page
         schema:
           type: string
+      - name: sort
+        in: query
+        description: 'Example: `date asc`, `description desc`'
+        schema:
+          type: string
       responses:
         '200':
           description: income transactions returned
@@ -756,6 +766,11 @@ paths:
       - name: perPage
         in: query
         description: The number of results per page
+        schema:
+          type: string
+      - name: sort
+        in: query
+        description: 'Example: `date asc`, `description desc`'
         schema:
           type: string
       responses:
