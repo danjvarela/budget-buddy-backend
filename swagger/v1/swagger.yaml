@@ -327,6 +327,20 @@ paths:
         description: 'Format: YYYY-MM-DD'
         schema:
           type: string
+      - name: descriptionContains
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The page number
+        schema:
+          type: string
+      - name: perPage
+        in: query
+        description: The number of results per page
+        schema:
+          type: string
       responses:
         '200':
           description: expense transactions returned
@@ -602,6 +616,20 @@ paths:
         description: 'Format: YYYY-MM-DD'
         schema:
           type: string
+      - name: descriptionContains
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The page number
+        schema:
+          type: string
+      - name: perPage
+        in: query
+        description: The number of results per page
+        schema:
+          type: string
       responses:
         '200':
           description: income transactions returned
@@ -714,6 +742,20 @@ paths:
       - name: toDate
         in: query
         description: 'Format: YYYY-MM-DD'
+        schema:
+          type: string
+      - name: descriptionContains
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The page number
+        schema:
+          type: string
+      - name: perPage
+        in: query
+        description: The number of results per page
         schema:
           type: string
       responses:

@@ -51,6 +51,8 @@ RSpec.describe "Incomes", type: :request do
       parameter name: :fromDate, in: :query, type: :string, description: "Format: YYYY-MM-DD"
       parameter name: :toDate, in: :query, type: :string, description: "Format: YYYY-MM-DD"
       parameter name: :descriptionContains, in: :query, type: :string
+      parameter name: :page, in: :query, type: :string, description: "The page number"
+      parameter name: :perPage, in: :query, type: :string, description: "The number of results per page"
 
       response 200, "income transactions returned" do
         schema type: :array, items: {"$ref" => "#/components/schemas/IncomeTransaction"}
@@ -71,6 +73,8 @@ RSpec.describe "Incomes", type: :request do
           logged_user.transactions.income.last.date
         }
         let(:descriptionContains) { "" }
+        let(:page) { 1 }
+        let(:perPage) { 2 }
         run_test!
       end
     end
