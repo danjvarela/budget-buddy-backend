@@ -6,6 +6,9 @@ class IncomesController < ProtectedResourceController
     authorize Transaction
 
     @incomes = policy_scope(Transaction).income
+    @incomes = @incomes.where(category_id: all_incomes_params[:category_id]) if all_incomes_params[:category_id].present?
+    @incomes = @incomes.where(financial_account_id: all_incomes_params[:financial_account_id]) if all_incomes_params[:financial_account_id].present?
+    @incomes = filter_transactions @incomes
     @incomes = filter_transactions @incomes
 
     render json: ActiveModelSerializers::SerializableResource.new(@incomes).serializable_hash
@@ -55,5 +58,9 @@ class IncomesController < ProtectedResourceController
 
   def income_params
     params.require(:income).permit(:category_id, :financial_account_id, :date, :amount, :description)
+  end
+
+  def all_incomes_params
+    params.permit(:category_id, :financial_account_id)
   end
 end

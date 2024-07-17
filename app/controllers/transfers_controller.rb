@@ -1,10 +1,16 @@
 class TransfersController < ProtectedResourceController
+  include TransactionFilters
   before_action :set_transfer, only: [:show, :update, :destroy]
 
   def index
     authorize Transaction
 
     @transfers = policy_scope(Transaction).transfer
+
+    @transfers = @transfers.where from_financial_account_id: all_transfers_params[:from_financial_account_id] if all_transfers_params[:from_financial_account_id].present?
+    @transfers = @transfers.where to_financial_account_id: all_transfers_params[:to_financial_account_id] if all_transfers_params[:to_financial_account_id].present?
+
+    @transfers = filter_transactions @transfers
 
     render json: ActiveModelSerializers::SerializableResource.new(@transfers).serializable_hash
   end
@@ -53,5 +59,9 @@ class TransfersController < ProtectedResourceController
 
   def transfer_params
     params.require(:transfer).permit(:from_financial_account_id, :to_financial_account_id, :date, :amount, :description)
+  end
+
+  def all_transfers_params
+    params.permit(:from_financial_account_id, :to_financial_account_id)
   end
 end

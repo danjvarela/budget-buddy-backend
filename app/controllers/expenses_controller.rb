@@ -8,6 +8,8 @@ class ExpensesController < ProtectedResourceController
 
     @expenses = policy_scope(Transaction).expense
 
+    @expenses = @expenses.where(category_id: all_expenses_params[:category_id]) if all_expenses_params[:category_id].present?
+    @expenses = @expenses.where(financial_account_id: all_expenses_params[:financial_account_id]) if all_expenses_params[:financial_account_id].present?
     @expenses = filter_transactions @expenses
 
     render json: ActiveModelSerializers::SerializableResource.new(@expenses).serializable_hash
@@ -57,5 +59,9 @@ class ExpensesController < ProtectedResourceController
 
   def expense_params
     params.require(:expense).permit(:category_id, :financial_account_id, :date, :amount, :description)
+  end
+
+  def all_expenses_params
+    params.permit(:category_id, :financial_account_id)
   end
 end

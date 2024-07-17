@@ -47,6 +47,15 @@ RSpec.describe "Transfers", type: :request do
       consumes "application/json"
       produces "application/json"
       security [bearer_auth: []]
+      parameter name: :fromDate, in: :query, type: :string, description: "Format: YYYY-MM-DD", required: false
+      parameter name: :toDate, in: :query, type: :string, description: "Format: YYYY-MM-DD", required: false
+      parameter name: :descriptionContains, in: :query, type: :string, required: false
+      parameter name: :page, in: :query, type: :string, description: "The page number", required: false
+      parameter name: :perPage, in: :query, type: :string, description: "The number of results per page", required: false
+      parameter name: :sort, in: :query, type: :string, description: "Example: `date asc`, `description desc`", required: false
+      parameter name: :categoryId, in: :query, type: :integer, required: false
+      parameter name: :fromFinancialAccountId, in: :query, type: :integer, required: false
+      parameter name: :toFinancialAccountId, in: :query, type: :integer, required: false
 
       response 200, "transfer transactions returned" do
         schema type: :array, items: {"$ref" => "#/components/schemas/TransferTransaction"}
