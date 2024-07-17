@@ -48,12 +48,13 @@ RSpec.describe "Incomes", type: :request do
       consumes "application/json"
       produces "application/json"
       security [bearer_auth: []]
-      parameter name: :fromDate, in: :query, type: :string, description: "Format: YYYY-MM-DD"
-      parameter name: :toDate, in: :query, type: :string, description: "Format: YYYY-MM-DD"
-      parameter name: :descriptionContains, in: :query, type: :string
-      parameter name: :page, in: :query, type: :string, description: "The page number"
-      parameter name: :perPage, in: :query, type: :string, description: "The number of results per page"
-      parameter name: :sort, in: :query, type: :string, description: "Example: `date asc`, `description desc`"
+      parameter name: :fromDate, in: :query, type: :string, description: "Format: YYYY-MM-DD", required: false
+      parameter name: :toDate, in: :query, type: :string, description: "Format: YYYY-MM-DD", required: false
+      parameter name: :descriptionContains, in: :query, type: :string, required: false
+      parameter name: :page, in: :query, type: :string, description: "The page number", required: false
+      parameter name: :perPage, in: :query, type: :string, description: "The number of results per page", required: false
+      parameter name: :sort, in: :query, type: :string, description: "Example: `date asc`, `description desc`", required: false
+      parameter name: :categoryId, in: :query, type: :string, required: false
 
       response 200, "income transactions returned" do
         schema type: :array, items: {"$ref" => "#/components/schemas/IncomeTransaction"}
@@ -76,7 +77,6 @@ RSpec.describe "Incomes", type: :request do
         let(:descriptionContains) { "" }
         let(:page) { 1 }
         let(:perPage) { 2 }
-        let(:sort) { nil }
         run_test!
       end
     end

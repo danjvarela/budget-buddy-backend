@@ -320,32 +320,43 @@ paths:
       - name: fromDate
         in: query
         description: 'Format: YYYY-MM-DD'
+        required: false
         schema:
           type: string
       - name: toDate
         in: query
         description: 'Format: YYYY-MM-DD'
+        required: false
         schema:
           type: string
       - name: descriptionContains
         in: query
+        required: false
         schema:
           type: string
       - name: page
         in: query
         description: The page number
+        required: false
         schema:
           type: string
       - name: perPage
         in: query
         description: The number of results per page
+        required: false
         schema:
           type: string
       - name: sort
         in: query
         description: 'Example: `date asc`, `description desc`'
+        required: false
         schema:
           type: string
+      - name: categoryId
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: expense transactions returned
@@ -614,30 +625,41 @@ paths:
       - name: fromDate
         in: query
         description: 'Format: YYYY-MM-DD'
+        required: false
         schema:
           type: string
       - name: toDate
         in: query
         description: 'Format: YYYY-MM-DD'
+        required: false
         schema:
           type: string
       - name: descriptionContains
         in: query
+        required: false
         schema:
           type: string
       - name: page
         in: query
         description: The page number
+        required: false
         schema:
           type: string
       - name: perPage
         in: query
         description: The number of results per page
+        required: false
         schema:
           type: string
       - name: sort
         in: query
         description: 'Example: `date asc`, `description desc`'
+        required: false
+        schema:
+          type: string
+      - name: categoryId
+        in: query
+        required: false
         schema:
           type: string
       responses:
@@ -747,30 +769,41 @@ paths:
       - name: fromDate
         in: query
         description: 'Format: YYYY-MM-DD'
+        required: false
         schema:
           type: string
       - name: toDate
         in: query
         description: 'Format: YYYY-MM-DD'
+        required: false
         schema:
           type: string
       - name: descriptionContains
         in: query
+        required: false
         schema:
           type: string
       - name: page
         in: query
         description: The page number
+        required: false
         schema:
           type: string
       - name: perPage
         in: query
         description: The number of results per page
+        required: false
         schema:
           type: string
       - name: sort
         in: query
         description: 'Example: `date asc`, `description desc`'
+        required: false
+        schema:
+          type: string
+      - name: categoryId
+        in: query
+        required: false
         schema:
           type: string
       responses:

@@ -6,9 +6,13 @@ module TransactionFilters
   include Sortable
 
   def filter_transactions(transactions)
-    a = filter_by_date transactions
+    opts = params.permit(:category_id)
+
+    filtered_by_category = opts[:category_id].present? ? transactions.where(category_id: opts[:category_id]) : transactions
+
+    a = filter_by_date filtered_by_category
     a = search_from(:description, a)
     a = sort(a)
-    paginate a.result(distinct: true)
+    paginate a
   end
 end

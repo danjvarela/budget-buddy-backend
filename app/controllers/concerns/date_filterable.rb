@@ -1,7 +1,7 @@
 module DateFilterable
   extend ActiveSupport::Concern
 
-  def filter_by_date(transactions)
+  def filter_by_date(relation)
     opts = params.permit(:from_date, :to_date)
 
     begin
@@ -12,7 +12,7 @@ module DateFilterable
       to_date = ""
     end
 
-    transactions.ransack(
+    relation.ransack(
       "date_gteq" => from_date,
       "date_lteq" => to_date
     ).result(distinct: true)
