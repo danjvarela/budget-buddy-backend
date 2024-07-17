@@ -55,6 +55,7 @@ RSpec.describe "Expenses", type: :request do
       parameter name: :perPage, in: :query, type: :string, description: "The number of results per page", required: false
       parameter name: :sort, in: :query, type: :string, description: "Example: `date asc`, `description desc`", required: false
       parameter name: :categoryId, in: :query, type: :integer, required: false
+      parameter name: :financialAccountId, in: :query, type: :integer, required: false
 
       response 200, "expense transactions returned" do
         schema type: :array, items: {"$ref" => "#/components/schemas/ExpenseTransaction"}

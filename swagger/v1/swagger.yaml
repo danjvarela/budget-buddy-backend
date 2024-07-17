@@ -357,6 +357,11 @@ paths:
         required: false
         schema:
           type: integer
+      - name: financialAccountId
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: expense transactions returned
@@ -661,7 +666,12 @@ paths:
         in: query
         required: false
         schema:
-          type: string
+          type: integer
+      - name: financialAccountId
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: income transactions returned
@@ -805,7 +815,12 @@ paths:
         in: query
         required: false
         schema:
-          type: string
+          type: integer
+      - name: financialAccountId
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: success
