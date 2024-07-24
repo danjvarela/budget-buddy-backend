@@ -20,7 +20,7 @@ RSpec.describe "Transfers", type: :request do
       }, name: :example
 
       response 201, "transfer transaction created" do
-        schema "$ref" => "#/components/schemas/TransferTransaction"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/TransferTransaction"}}
         let(:transfer) {
           from_financial_account = create :financial_account, user: logged_user
           to_financial_account = create :financial_account, user: logged_user
@@ -58,7 +58,13 @@ RSpec.describe "Transfers", type: :request do
       parameter name: :toFinancialAccountId, in: :query, type: :integer, required: false
 
       response 200, "transfer transactions returned" do
-        schema type: :array, items: {"$ref" => "#/components/schemas/TransferTransaction"}
+        schema type: :object, properties: {
+          **SwaggerSchemas::PAGINATION_DATA_PROPERTIES,
+          data: {
+            type: :array,
+            items: {"$ref" => "#/components/schemas/TransferTransaction"}
+          }
+        }
         run_test!
       end
     end
@@ -73,7 +79,7 @@ RSpec.describe "Transfers", type: :request do
       security [bearer_auth: []]
 
       response 200, "transfer transaction returned" do
-        schema "$ref" => "#/components/schemas/TransferTransaction"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/TransferTransaction"}}
         let(:id) { create(:transfer_transaction, user: logged_user).id }
         run_test!
       end
@@ -94,7 +100,7 @@ RSpec.describe "Transfers", type: :request do
       security [bearer_auth: []]
 
       response 200, "transfer updated" do
-        schema "$ref" => "#/components/schemas/TransferTransaction"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/TransferTransaction"}}
         let(:transfer) { create(:transfer_transaction, user: logged_user) }
         let(:id) { transfer.id }
         let(:new_attributes) { {amount: transfer.amount + 1} }

@@ -14,7 +14,7 @@ RSpec.describe "Categories", type: :request do
       request_body_example value: {name: "Transportation", categoryType: "expense"}, name: :example
 
       response 201, "category created" do
-        schema "$ref" => "#/components/schemas/Category"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/Category"}}
         let(:category) { camelize_keys(attributes_for(:category)) }
         run_test!
       end
@@ -35,8 +35,13 @@ RSpec.describe "Categories", type: :request do
       parameter name: :categoryType, in: :query, type: :string, description: "This is type of category to query. It can be `income` or `expense`. The request will return all the categories for the logged in user if this is not specified or its value is null."
 
       response 200, "categories returned" do
-        schema type: :array, items: {"$ref" => "#/components/schemas/Category"}
-        let(:category_type) { "income" }
+        schema type: :object, properties: {
+          data: {
+            type: :array,
+            items: {"$ref" => "#/components/schemas/Category"}
+          }
+        }
+        let(:categoryType) { "income" }
         run_test!
       end
     end
@@ -51,7 +56,7 @@ RSpec.describe "Categories", type: :request do
       security [bearer_auth: []]
 
       response 200, "category returned" do
-        schema "$ref" => "#/components/schemas/Category"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/Category"}}
         let(:id) { create(:category, user: logged_user).id }
         run_test!
       end
@@ -72,7 +77,7 @@ RSpec.describe "Categories", type: :request do
       security [bearer_auth: []]
 
       response 200, "category updated" do
-        schema "$ref" => "#/components/schemas/Category"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/Category"}}
         let(:category) { create :category, user: logged_user }
         let(:id) { category.id }
         let(:new_attributes) { {name: generate(:category_name)} }

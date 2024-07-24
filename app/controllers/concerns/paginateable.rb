@@ -6,7 +6,18 @@ module Paginateable
 
     relation.paginate(
       page: opts[:page] || 1,
-      per_page: opts[:per_page] || 20
+      per_page: opts[:per_page]
     )
+  end
+
+  def pagination_data(collection)
+    {
+      currentPage: collection.current_page,
+      nextPage: collection.next_page,
+      prevPage: collection.previous_page,
+      totalPages: collection.total_pages,
+      totalCount: collection.total_entries,
+      perPageCount: collection.per_page
+    }
   end
 end

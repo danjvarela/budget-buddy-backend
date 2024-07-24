@@ -14,7 +14,7 @@ RSpec.describe "Financial Accounts", type: :request do
       request_body_example value: {name: "Cash", amount: 30.0, description: "Cash on hand"}, name: :example
 
       response 201, "financial account created" do
-        schema "$ref" => "#/components/schemas/FinancialAccount"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/FinancialAccount"}}
         let(:financial_account) { camelize_keys(attributes_for(:financial_account)) }
         run_test!
       end
@@ -34,7 +34,12 @@ RSpec.describe "Financial Accounts", type: :request do
       security [bearer_auth: []]
 
       response 200, "financial accounts returned" do
-        schema type: :array, items: {"$ref" => "#/components/schemas/FinancialAccount"}
+        schema type: :object, properties: {
+          data: {
+            type: :array,
+            items: {"$ref" => "#/components/schemas/FinancialAccount"}
+          }
+        }
         run_test!
       end
     end
@@ -49,7 +54,7 @@ RSpec.describe "Financial Accounts", type: :request do
       security [bearer_auth: []]
 
       response 200, "financial account returned" do
-        schema "$ref" => "#/components/schemas/FinancialAccount"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/FinancialAccount"}}
         let(:id) { create(:financial_account, user: logged_user).id }
         run_test!
       end
@@ -70,7 +75,7 @@ RSpec.describe "Financial Accounts", type: :request do
       security [bearer_auth: []]
 
       response 200, "financial account updated" do
-        schema "$ref" => "#/components/schemas/FinancialAccount"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/FinancialAccount"}}
         let(:financial_account) { create :financial_account, user: logged_user }
         let(:id) { financial_account.id }
         let(:new_attributes) { {name: generate(:financial_account_name)} }

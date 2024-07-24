@@ -8,9 +8,11 @@ RSpec.describe "Session", type: :request do
     get "Retrieves the currently logged account" do
       tags "Session"
       consumes "application/json"
+      produces "application/json"
       security [bearer_auth: []]
 
       response 200, "success" do
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/User"}}
         run_test!
       end
     end

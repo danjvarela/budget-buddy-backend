@@ -145,7 +145,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/Category"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/Category"
         '422':
           description: failed to create category
           content:
@@ -189,9 +192,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/Category"
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Category"
   "/categories/{id}":
     get:
       summary: Gets the details of a category
@@ -211,7 +217,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/Category"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/Category"
         '404':
           description: category not found
           content:
@@ -236,7 +245,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/Category"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/Category"
         '404':
           description: category not found
           content:
@@ -283,7 +295,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExpenseTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/ExpenseTransaction"
         '422':
           description: expense transaction creation failed
           content:
@@ -368,9 +383,26 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/ExpenseTransaction"
+                type: object
+                properties:
+                  currentPage:
+                    type: number
+                  nextPage:
+                    type: number
+                    nullable: true
+                  prevPage:
+                    type: number
+                    nullable: true
+                  totalPages:
+                    type: number
+                  totalCount:
+                    type: number
+                  perPageCount:
+                    type: number
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/ExpenseTransaction"
   "/expenses/{id}":
     get:
       summary: Gets the details of an expense transaction
@@ -390,7 +422,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExpenseTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/ExpenseTransaction"
         '404':
           description: expense transaction not found
           content:
@@ -415,7 +450,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExpenseTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/ExpenseTransaction"
         '404':
           description: expense transaction not found
           content:
@@ -462,7 +500,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/FinancialAccount"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/FinancialAccount"
         '422':
           description: failed to create financial account
           content:
@@ -499,9 +540,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/FinancialAccount"
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/FinancialAccount"
   "/financial_accounts/{id}":
     get:
       summary: Gets the details of a financial account
@@ -521,7 +565,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/FinancialAccount"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/FinancialAccount"
         '404':
           description: financial account not found
           content:
@@ -546,7 +593,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/FinancialAccount"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/FinancialAccount"
         '404':
           description: financial account not found
           content:
@@ -593,7 +643,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/IncomeTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/IncomeTransaction"
         '422':
           description: income transaction creation failed
           content:
@@ -678,9 +731,26 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/IncomeTransaction"
+                type: object
+                properties:
+                  currentPage:
+                    type: number
+                  nextPage:
+                    type: number
+                    nullable: true
+                  prevPage:
+                    type: number
+                    nullable: true
+                  totalPages:
+                    type: number
+                  totalCount:
+                    type: number
+                  perPageCount:
+                    type: number
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/IncomeTransaction"
   "/incomes/{id}":
     get:
       summary: Gets the details of an income transaction
@@ -700,7 +770,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/IncomeTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/IncomeTransaction"
         '404':
           description: income transaction not found
           content:
@@ -725,7 +798,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/IncomeTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/IncomeTransaction"
         '404':
           description: income transaction not found
           content:
@@ -768,6 +844,13 @@ paths:
       responses:
         '200':
           description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/User"
   "/transactions":
     get:
       summary: Gets all transactions associated with the currently logged user
@@ -816,20 +899,32 @@ paths:
         required: false
         schema:
           type: integer
-      - name: financialAccountId
-        in: query
-        required: false
-        schema:
-          type: integer
       responses:
         '200':
           description: success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/Transaction"
+                type: object
+                properties:
+                  currentPage:
+                    type: number
+                  nextPage:
+                    type: number
+                    nullable: true
+                  prevPage:
+                    type: number
+                    nullable: true
+                  totalPages:
+                    type: number
+                  totalCount:
+                    type: number
+                  perPageCount:
+                    type: number
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Transaction"
   "/transactions/{id}":
     delete:
       summary: Deletes an income, expense, or transfer transaction
@@ -862,7 +957,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/TransferTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/TransferTransaction"
         '422':
           description: failed to create transfer transaction
           content:
@@ -952,9 +1050,26 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/TransferTransaction"
+                type: object
+                properties:
+                  currentPage:
+                    type: number
+                  nextPage:
+                    type: number
+                    nullable: true
+                  prevPage:
+                    type: number
+                    nullable: true
+                  totalPages:
+                    type: number
+                  totalCount:
+                    type: number
+                  perPageCount:
+                    type: number
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/TransferTransaction"
   "/transfers/{id}":
     get:
       summary: Gets the details of a transfer transaction
@@ -974,7 +1089,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/TransferTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/TransferTransaction"
         '404':
           description: transfer not found
           content:
@@ -999,7 +1117,10 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/TransferTransaction"
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/TransferTransaction"
         '404':
           description: transfer not found
           content:
@@ -1184,17 +1305,6 @@ components:
       type: http
       scheme: bearer
   schemas:
-    TransactionType:
-      type: string
-      enum:
-      - income
-      - expense
-      - transfer
-    CategoryType:
-      type: string
-      enum:
-      - income
-      - expense
     ResourceCreationError:
       type: object
       properties:
@@ -1211,6 +1321,19 @@ components:
       properties:
         error:
           type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        email:
+          type: string
+        status:
+          type: string
+          enum:
+          - verified
+          - unverified
+          - closed
     CreateFinancialAccountParams:
       type: object
       properties:
@@ -1235,6 +1358,7 @@ components:
           format: double
         description:
           type: string
+          nullable: true
     FinancialAccount:
       type: object
       properties:
@@ -1243,19 +1367,22 @@ components:
         initialAmount:
           type: number
           format: double
-        currentBalance:
-          type: number
-          format: double
         description:
           type: string
           nullable: true
+        currentBalance:
+          type: number
+          format: double
         id:
           type: integer
     CreateCategoryParams:
       type: object
       properties:
         categoryType:
-          "$ref": "#/components/schemas/CategoryType"
+          type: string
+          enum:
+          - income
+          - expense
         name:
           type: string
       required:
@@ -1265,14 +1392,20 @@ components:
       type: object
       properties:
         categoryType:
-          "$ref": "#/components/schemas/CategoryType"
+          type: string
+          enum:
+          - income
+          - expense
         name:
           type: string
     Category:
       type: object
       properties:
         categoryType:
-          "$ref": "#/components/schemas/CategoryType"
+          type: string
+          enum:
+          - income
+          - expense
         name:
           type: string
         id:

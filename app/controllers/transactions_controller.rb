@@ -7,10 +7,15 @@ class TransactionsController < ProtectedResourceController
     authorize Transaction
 
     @transactions = policy_scope(Transaction).all
-
+    @transactions = @transactions.where(category_id: all_transactions_params[:category_id]) if all_transactions_params[:category_id].present?
     @transactions = filter_transactions @transactions
 
-    render json: ActiveModelSerializers::SerializableResource.new(@transactions).serializable_hash
+    data = ActiveModelSerializers::SerializableResource.new(@transactions).serializable_hash
+
+    render json: {
+      **pagination_data(@transactions),
+      **data
+    }
   end
 
   # DELETE /transactions/1
@@ -20,6 +25,10 @@ class TransactionsController < ProtectedResourceController
   end
 
   private
+
+  def all_transactions_params
+    params.permit(:category_id)
+  end
 
   def set_transaction
     @transaction = policy_scope(Transaction).find(params[:id])

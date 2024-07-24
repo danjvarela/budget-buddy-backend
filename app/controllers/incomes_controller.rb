@@ -9,9 +9,13 @@ class IncomesController < ProtectedResourceController
     @incomes = @incomes.where(category_id: all_incomes_params[:category_id]) if all_incomes_params[:category_id].present?
     @incomes = @incomes.where(financial_account_id: all_incomes_params[:financial_account_id]) if all_incomes_params[:financial_account_id].present?
     @incomes = filter_transactions @incomes
-    @incomes = filter_transactions @incomes
 
-    render json: ActiveModelSerializers::SerializableResource.new(@incomes).serializable_hash
+    data = ActiveModelSerializers::SerializableResource.new(@incomes, each_serializer: IncomeSerializer).serializable_hash
+
+    render json: {
+      **pagination_data(@incomes),
+      **data
+    }
   end
 
   def create
@@ -48,12 +52,12 @@ class IncomesController < ProtectedResourceController
   private
 
   def serialized_income
-    ActiveModelSerializers::SerializableResource.new(@income).serializable_hash
+    ActiveModelSerializers::SerializableResource.new(@income, serializer: IncomeSerializer).serializable_hash
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_income
-    @income = policy_scope(Transaction).find(params[:id])
+    @income = policy_scope(Transaction).income.find(params[:id])
   end
 
   def income_params

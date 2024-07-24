@@ -7,12 +7,16 @@ class ExpensesController < ProtectedResourceController
     authorize Transaction
 
     @expenses = policy_scope(Transaction).expense
-
     @expenses = @expenses.where(category_id: all_expenses_params[:category_id]) if all_expenses_params[:category_id].present?
     @expenses = @expenses.where(financial_account_id: all_expenses_params[:financial_account_id]) if all_expenses_params[:financial_account_id].present?
     @expenses = filter_transactions @expenses
 
-    render json: ActiveModelSerializers::SerializableResource.new(@expenses).serializable_hash
+    data = ActiveModelSerializers::SerializableResource.new(@expenses, each_serializer: ExpenseSerializer, include_pagination_data: true).serializable_hash
+
+    render json: {
+      **pagination_data(@expenses),
+      **data
+    }
   end
 
   def create
@@ -49,12 +53,12 @@ class ExpensesController < ProtectedResourceController
   private
 
   def serialized_expense
-    ActiveModelSerializers::SerializableResource.new(@expense).serializable_hash
+    ActiveModelSerializers::SerializableResource.new(@expense, serializer: ExpenseSerializer).serializable_hash
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_expense
-    @expense = policy_scope(Transaction).find(params[:id])
+    @expense = policy_scope(Transaction).expense.find(params[:id])
   end
 
   def expense_params

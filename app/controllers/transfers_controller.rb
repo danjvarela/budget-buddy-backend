@@ -12,7 +12,12 @@ class TransfersController < ProtectedResourceController
 
     @transfers = filter_transactions @transfers
 
-    render json: ActiveModelSerializers::SerializableResource.new(@transfers).serializable_hash
+    data = ActiveModelSerializers::SerializableResource.new(@transfers, each_serializer: TransferSerializer).serializable_hash
+
+    render json: {
+      **pagination_data(@transfers),
+      **data
+    }
   end
 
   def create
@@ -49,12 +54,12 @@ class TransfersController < ProtectedResourceController
   private
 
   def serialized_transfer
-    ActiveModelSerializers::SerializableResource.new(@transfer).serializable_hash
+    ActiveModelSerializers::SerializableResource.new(@transfer, serializer: TransferSerializer).serializable_hash
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_transfer
-    @transfer = policy_scope(Transaction).find(params[:id])
+    @transfer = policy_scope(Transaction).transfer.find(params[:id])
   end
 
   def transfer_params

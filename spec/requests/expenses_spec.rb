@@ -1,5 +1,6 @@
 require "swagger_helper"
 require "auth_context"
+require "swagger_schemas"
 
 RSpec.describe "Expenses", type: :request do
   include_context "auth"
@@ -20,7 +21,7 @@ RSpec.describe "Expenses", type: :request do
       }, name: :example
 
       response 201, "expense transaction created" do
-        schema "$ref" => "#/components/schemas/ExpenseTransaction"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/ExpenseTransaction"}}
         let(:expense) {
           financial_account = create :financial_account, user: logged_user
           category = create :category, user: logged_user
@@ -58,7 +59,13 @@ RSpec.describe "Expenses", type: :request do
       parameter name: :financialAccountId, in: :query, type: :integer, required: false
 
       response 200, "expense transactions returned" do
-        schema type: :array, items: {"$ref" => "#/components/schemas/ExpenseTransaction"}
+        schema type: :object, properties: {
+          **SwaggerSchemas::PAGINATION_DATA_PROPERTIES,
+          data: {
+            type: :array,
+            items: {"$ref" => "#/components/schemas/ExpenseTransaction"}
+          }
+        }
 
         def create_transactions
           financial_account = create :financial_account, user: logged_user
@@ -92,7 +99,7 @@ RSpec.describe "Expenses", type: :request do
       security [bearer_auth: []]
 
       response 200, "expense transaction returned" do
-        schema "$ref" => "#/components/schemas/ExpenseTransaction"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/ExpenseTransaction"}}
         let(:id) { create(:expense_transaction, user: logged_user).id }
         run_test!
       end
@@ -113,7 +120,7 @@ RSpec.describe "Expenses", type: :request do
       security [bearer_auth: []]
 
       response 200, "expense transaction updated" do
-        schema "$ref" => "#/components/schemas/ExpenseTransaction"
+        schema type: :object, properties: {data: {"$ref" => "#/components/schemas/ExpenseTransaction"}}
         let(:expense) { create(:expense_transaction, user: logged_user) }
         let(:id) { expense.id }
         let(:new_attributes) { {amount: expense.amount + 1} }

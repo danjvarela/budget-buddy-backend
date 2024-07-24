@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require "swagger_schemas"
 
 RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
@@ -30,116 +31,70 @@ RSpec.configure do |config|
           }
         },
         schemas: {
-          TransactionType: {
-            type: :string,
-            enum: [:income, :expense, :transfer]
-          },
-          CategoryType: {
-            type: :string,
-            enum: [:income, :expense]
-          },
           ResourceCreationError: {
             type: :object,
-            properties: {
-              errors: {
-                type: :object,
-                additionalProperties: {
-                  type: :array,
-                  items: {type: :string}
-                }
-              }
-            },
+            properties: SwaggerSchemas::RESOURCE_CREATION_ERROR_PROPERTIES,
             required: ["errors"]
           },
           ResourceNotFoundError: {
             type: :object,
-            properties: {
-              error: {type: :string}
-            }
+            properties: SwaggerSchemas::RESOURCE_NOT_FOUND_ERROR_PROPERTIES
+          },
+          User: {
+            type: :object,
+            properties: SwaggerSchemas::USER_PROPERTIES
           },
           CreateFinancialAccountParams: {
             type: :object,
-            properties: {
-              name: {type: :string},
-              initialAmount: {type: :number, format: :double},
-              description: {type: :string, nullable: true}
-            },
+            properties: SwaggerSchemas::FINANCIAL_ACCOUNT_PROPERTIES,
             required: ["name", "initialAmount"]
           },
           UpdateFinancialAccountParams: {
             type: :object,
-            properties: {
-              name: {type: :string},
-              initialAmount: {type: :number, format: :double},
-              description: {type: :string}
-            }
+            properties: SwaggerSchemas::FINANCIAL_ACCOUNT_PROPERTIES
           },
           FinancialAccount: {
             type: :object,
             properties: {
-              name: {type: :string},
-              initialAmount: {type: :number, format: :double},
+              **SwaggerSchemas::FINANCIAL_ACCOUNT_PROPERTIES,
               currentBalance: {type: :number, format: :double},
-              description: {type: :string, nullable: true},
               id: {type: :integer}
             }
           },
           CreateCategoryParams: {
             type: :object,
-            properties: {
-              categoryType: {"$ref": "#/components/schemas/CategoryType"},
-              name: {type: :string}
-            },
+            properties: SwaggerSchemas::CATEGORY_PROPERTIES,
             required: ["name", "categoryType"]
           },
           UpdateCategoryParams: {
             type: :object,
-            properties: {
-              categoryType: {"$ref": "#/components/schemas/CategoryType"},
-              name: {type: :string}
-            }
+            properties: SwaggerSchemas::CATEGORY_PROPERTIES
           },
           Category: {
             type: :object,
             properties: {
-              categoryType: {"$ref": "#/components/schemas/CategoryType"},
-              name: {type: :string},
+              **SwaggerSchemas::CATEGORY_PROPERTIES,
               id: {type: :integer}
             }
           },
           ExpenseTransaction: {
             type: :object,
             properties: {
-              date: {type: :string},
-              amount: {type: :number, format: :double},
-              description: {type: :string, nullable: true},
-              transactionType: {type: :string},
-              financialAccount: {"$ref": "#/components/schemas/FinancialAccount"},
-              category: {"$ref": "#/components/schemas/Category"},
+              **SwaggerSchemas::EXPENSE_TRANSACTION_PROPERTIES,
               id: {type: :integer}
             }
           },
           IncomeTransaction: {
             type: :object,
             properties: {
-              date: {type: :string},
-              amount: {type: :number, format: :double},
-              description: {type: :string, nullable: true},
-              transactionType: {type: :string},
-              financialAccount: {"$ref": "#/components/schemas/FinancialAccount"},
-              category: {"$ref": "#/components/schemas/Category"},
+              **SwaggerSchemas::EXPENSE_TRANSACTION_PROPERTIES,
               id: {type: :integer}
             }
           },
           TransferTransaction: {
             type: :object,
             properties: {
-              date: {type: :string},
-              amount: {type: :number, format: :double},
-              description: {type: :string, nullable: true},
-              transactionType: {type: :string},
-              fromFinancialAccount: {"$ref": "#/components/schemas/FinancialAccount"},
-              toFinancialAccount: {"$ref": "#/components/schemas/FinancialAccount"},
+              **SwaggerSchemas::TRANSFER_TRANSACTION_PROPERTIES,
               id: {type: :integer}
             }
           },
@@ -160,24 +115,12 @@ RSpec.configure do |config|
           },
           CreateExpenseParams: {
             type: :object,
-            properties: {
-              date: {type: :string},
-              amount: {type: :number, format: :double},
-              description: {type: :string, nullable: true},
-              financialAccountId: {type: :integer},
-              categoryId: {type: :integer}
-            },
+            properties: SwaggerSchemas::CREATE_EXPENSE_PROPERTIES,
             required: ["financialAccountId", "categoryId", "amount", "date"]
           },
           UpdateExpenseParams: {
             type: :object,
-            properties: {
-              date: {type: :string},
-              amount: {type: :number, format: :double},
-              description: {type: :string, nullable: true},
-              financialAccountId: {type: :integer},
-              categoryId: {type: :integer}
-            }
+            properties: SwaggerSchemas::CREATE_EXPENSE_PROPERTIES
           },
           CreateIncomeParams: {
             allOf: [{"$ref": "#/components/schemas/CreateExpenseParams"}]
@@ -187,24 +130,12 @@ RSpec.configure do |config|
           },
           CreateTransferParams: {
             type: :object,
-            properties: {
-              date: {type: :string},
-              amount: {type: :number, format: :double},
-              description: {type: :string, nullable: true},
-              fromFinancialAccountId: {type: :integer},
-              toFinancialAccountId: {type: :integer}
-            },
+            properties: SwaggerSchemas::CREATE_TRANSFER_PROPERTIES,
             required: ["fromFinancialAccountId", "toFinancialAccountId", "categoryId", "amount", "date"]
           },
           UpdateTransferParams: {
             type: :object,
-            properties: {
-              date: {type: :string},
-              amount: {type: :number, format: :double},
-              description: {type: :string, nullable: true},
-              fromFinancialAccountId: {type: :integer},
-              toFinancialAccountId: {type: :integer}
-            }
+            properties: SwaggerSchemas::CREATE_TRANSFER_PROPERTIES
           }
         }
       },

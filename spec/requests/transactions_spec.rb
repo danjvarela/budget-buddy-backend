@@ -17,10 +17,15 @@ RSpec.describe "Transactions", type: :request do
       parameter name: :perPage, in: :query, type: :string, description: "The number of results per page", required: false
       parameter name: :sort, in: :query, type: :string, description: "Example: `date asc`, `description desc`", required: false
       parameter name: :categoryId, in: :query, type: :integer, required: false
-      parameter name: :financialAccountId, in: :query, type: :integer, required: false
 
       response 200, "success" do
-        schema type: :array, items: {"$ref": "#/components/schemas/Transaction"}
+        schema type: :object, properties: {
+          **SwaggerSchemas::PAGINATION_DATA_PROPERTIES,
+          data: {
+            type: :array,
+            items: {"$ref" => "#/components/schemas/Transaction"}
+          }
+        }
 
         def create_transactions
           financial_account = create :financial_account, user: logged_user
