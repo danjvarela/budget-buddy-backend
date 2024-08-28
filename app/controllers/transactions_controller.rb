@@ -1,5 +1,6 @@
 class TransactionsController < ProtectedResourceController
-  include TransactionFilters
+  include TransactionHelpers
+
   before_action :set_transaction, only: [:destroy]
 
   # GET /transactions
@@ -8,14 +9,8 @@ class TransactionsController < ProtectedResourceController
 
     @transactions = policy_scope(Transaction).all
     @transactions = @transactions.where(category_id: all_transactions_params[:category_id]) if all_transactions_params[:category_id].present?
-    @transactions = filter_transactions @transactions
 
-    data = ActiveModelSerializers::SerializableResource.new(@transactions).serializable_hash
-
-    render json: {
-      **pagination_data(@transactions),
-      **data
-    }
+    render_transactions @transactions, TransactionSerializer, all_transactions_params
   end
 
   # DELETE /transactions/1
@@ -27,7 +22,7 @@ class TransactionsController < ProtectedResourceController
   private
 
   def all_transactions_params
-    params.permit(:category_id)
+    params.permit(:category_id, *shared_params)
   end
 
   def set_transaction

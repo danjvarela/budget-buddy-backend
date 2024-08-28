@@ -1,5 +1,6 @@
 class IncomesController < ProtectedResourceController
-  include TransactionFilters
+  include TransactionHelpers
+
   before_action :set_income, only: [:show, :update, :destroy]
 
   def index
@@ -8,14 +9,8 @@ class IncomesController < ProtectedResourceController
     @incomes = policy_scope(Transaction).income
     @incomes = @incomes.where(category_id: all_incomes_params[:category_id]) if all_incomes_params[:category_id].present?
     @incomes = @incomes.where(financial_account_id: all_incomes_params[:financial_account_id]) if all_incomes_params[:financial_account_id].present?
-    @incomes = filter_transactions @incomes
 
-    data = ActiveModelSerializers::SerializableResource.new(@incomes, each_serializer: IncomeSerializer).serializable_hash
-
-    render json: {
-      **pagination_data(@incomes),
-      **data
-    }
+    render_transactions @incomes, IncomeSerializer, all_incomes_params
   end
 
   def create
@@ -65,6 +60,6 @@ class IncomesController < ProtectedResourceController
   end
 
   def all_incomes_params
-    params.permit(:category_id, :financial_account_id)
+    params.permit(:category_id, :financial_account_id, *shared_params)
   end
 end

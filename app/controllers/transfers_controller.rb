@@ -1,5 +1,6 @@
 class TransfersController < ProtectedResourceController
-  include TransactionFilters
+  include TransactionHelpers
+
   before_action :set_transfer, only: [:show, :update, :destroy]
 
   def index
@@ -9,15 +10,8 @@ class TransfersController < ProtectedResourceController
 
     @transfers = @transfers.where from_financial_account_id: all_transfers_params[:from_financial_account_id] if all_transfers_params[:from_financial_account_id].present?
     @transfers = @transfers.where to_financial_account_id: all_transfers_params[:to_financial_account_id] if all_transfers_params[:to_financial_account_id].present?
-
-    @transfers = filter_transactions @transfers
-
-    data = ActiveModelSerializers::SerializableResource.new(@transfers, each_serializer: TransferSerializer).serializable_hash
-
-    render json: {
-      **pagination_data(@transfers),
-      **data
-    }
+    
+    render_transactions @transfers, TransferSerializer, all_transfers_params
   end
 
   def create
@@ -67,6 +61,6 @@ class TransfersController < ProtectedResourceController
   end
 
   def all_transfers_params
-    params.permit(:from_financial_account_id, :to_financial_account_id)
+    params.permit(:from_financial_account_id, :to_financial_account_id, *shared_params)
   end
 end

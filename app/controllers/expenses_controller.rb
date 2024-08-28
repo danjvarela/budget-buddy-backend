@@ -1,5 +1,5 @@
 class ExpensesController < ProtectedResourceController
-  include TransactionFilters
+  include TransactionHelpers
 
   before_action :set_expense, only: [:show, :update, :destroy]
 
@@ -9,14 +9,8 @@ class ExpensesController < ProtectedResourceController
     @expenses = policy_scope(Transaction).expense
     @expenses = @expenses.where(category_id: all_expenses_params[:category_id]) if all_expenses_params[:category_id].present?
     @expenses = @expenses.where(financial_account_id: all_expenses_params[:financial_account_id]) if all_expenses_params[:financial_account_id].present?
-    @expenses = filter_transactions @expenses
 
-    data = ActiveModelSerializers::SerializableResource.new(@expenses, each_serializer: ExpenseSerializer, include_pagination_data: true).serializable_hash
-
-    render json: {
-      **pagination_data(@expenses),
-      **data
-    }
+    render_transactions(@expenses, ExpenseSerializer, all_expenses_params)
   end
 
   def create
@@ -66,6 +60,6 @@ class ExpensesController < ProtectedResourceController
   end
 
   def all_expenses_params
-    params.permit(:category_id, :financial_account_id)
+    params.permit(:category_id, :financial_account_id, *shared_params)
   end
 end
