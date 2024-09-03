@@ -16,6 +16,8 @@ class RodauthMain < Rodauth::Rails::Auth
     omniauth_authorize_url_key "authorize_url"
     omniauth_error_type_key "error_type"
 
+    session_inactivity_deadline 60 * 10
+
     # See the Rodauth documentation for the list of available config options:
     # http://rodauth.jeremyevans.net/documentation.html
 
