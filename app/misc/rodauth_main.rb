@@ -5,7 +5,7 @@ class RodauthMain < Rodauth::Rails::Auth
     # List of authentication features that are loaded.
     enable :create_account, :verify_account,
       :login, :logout, :reset_password, :change_password, :change_password_notify, :internal_request,
-      :change_login, :verify_login_change, :close_account, :omniauth, :active_sessions, :jwt
+      :change_login, :verify_login_change, :close_account, :omniauth, :active_sessions, :jwt, :session_expiration
 
     omniauth_provider :google_oauth2, Rails.application.credentials.google_oauth2["client_id"], Rails.application.credentials.google_oauth2["client_secret"], {
       name: :google,
@@ -17,6 +17,7 @@ class RodauthMain < Rodauth::Rails::Auth
     omniauth_error_type_key "error_type"
 
     session_inactivity_deadline 60 * 10
+    max_session_lifetime 60 * 5
 
     # See the Rodauth documentation for the list of available config options:
     # http://rodauth.jeremyevans.net/documentation.html
